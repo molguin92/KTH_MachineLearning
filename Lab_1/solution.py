@@ -2,9 +2,11 @@
 from python.monkdata import monk1, monk1test, monk2, monk2test, monk3, monk3test, attributes
 from python.dtree import entropy, averageGain, select, buildTree, check, allPruned
 from python.drawtree_qt5 import drawTree
-import statistics
 import random
 from pprint import PrettyPrinter
+import numpy as np
+import matplotlib.pyplot as plt
+
 
 def partition(data, fraction):
     assert 0 < fraction < 1
@@ -86,40 +88,56 @@ def optimum_prune(tree, val_data):
 
 def assignment_7():
 
-    print("*** ASSIGNMENT 3 ***")
+    print("*** ASSIGNMENT 7 ***")
     
-    samples = 10
-    fractions = (0.3, 0.4, 0.5, 0.6, 0.7, 0.8)
+    samples = 100
+    fractions = (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
     datasets = {
-        'monk1' : monk1,
-        'monk3' : monk3
+        'monk1' : {
+            'training': monk1,
+            'test': monk1test
+        },
+        'monk3' : {
+            'training': monk3,
+            'test': monk3test
+        }
     }
 
     results = {}
 
-    for dataset_name, dataset in datasets.items(): 
+    for dataset_name, dataset_data in datasets.items(): 
+        dataset = dataset_data['training']
+        dataset_test = dataset_data['test']
         results[dataset_name] = {}
 
         for fraction in fractions:
-            reliabilities = []
-            for i in range(samples):
+            errors = []
+            for _ in range(samples):
                 train, validation = partition(dataset, fraction)
                 tree = buildTree(train, attributes)
-                opt_tree, reliability = optimum_prune(tree, validation)
-                reliabilities.append(reliability)
-
-            errors = list(map(lambda x: 1.0 - x, reliabilities))
+                opt_tree, _ = optimum_prune(tree, validation)
+                errors.append(1.0 - check(opt_tree, dataset_test))
             
             results[dataset_name][fraction] = {
-                'mean': statistics.mean(errors),
-                'median': statistics.median(errors),
-                'std': statistics.stdev(errors),
+                'mean': np.mean(errors),
+                'median': np.median(errors),
+                'std': np.std(errors),
                 'max': max(errors),
                 'min': min(errors)
             }
 
     pp = PrettyPrinter(indent=4)
     pp.pprint(results)
+
+    y_monk1 = [ (stats['mean'], stats['std']) for fraction, stats in results['monk1'].items() ]
+    y_monk3 = [ (stats['mean'], stats['std']) for fraction, stats in results['monk3'].items() ]
+
+    plt.figure()
+    plt.errorbar(fractions, [e[0] for e in y_monk1], yerr=[e[1] for e in y_monk1], fmt='or', capsize=5, label='MONK-1')
+    plt.errorbar(fractions, [e[0] for e in y_monk3], yerr=[e[1] for e in y_monk3], fmt='ob', capsize=5, label='MONK-3')
+    plt.legend()
+    plt.title('Error vs. fraction size')
+    plt.show()
 
 if __name__ == '__main__':
     assignment_1()

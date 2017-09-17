@@ -4,98 +4,100 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
-Attribute	../python/monkdata.py	/^class Attribute:$/;"	kind:class	line:10
-MyMainWindow	../python/drawtree_qt4.py	/^class MyMainWindow( QtGui.QMainWindow ):$/;"	kind:class	line:56
-MyMainWindow	../python/drawtree_qt5.py	/^class MyMainWindow( QMainWindow ):$/;"	kind:class	line:57
-MyPainting	../python/drawtree_qt4.py	/^class MyPainting(QtGui.QWidget):$/;"	kind:class	line:7
-MyPainting	../python/drawtree_qt5.py	/^class MyPainting(QWidget):$/;"	kind:class	line:10
-QApplication	../python/drawtree_qt5.py	/^from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow$/;"	kind:namespace	line:7
-QMainWindow	../python/drawtree_qt5.py	/^from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow$/;"	kind:namespace	line:7
-QWidget	../python/drawtree_qt5.py	/^from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow$/;"	kind:namespace	line:7
-Qt	../python/drawtree_qt4.py	/^from PyQt4 import Qt, QtCore, QtGui$/;"	kind:namespace	line:5
-QtCore	../python/drawtree_qt4.py	/^from PyQt4 import Qt, QtCore, QtGui$/;"	kind:namespace	line:5
-QtCore	../python/drawtree_qt5.py	/^from PyQt5 import QtCore, QtGui$/;"	kind:namespace	line:6
-QtGui	../python/drawtree_qt4.py	/^from PyQt4 import Qt, QtCore, QtGui$/;"	kind:namespace	line:5
-QtGui	../python/drawtree_qt5.py	/^from PyQt5 import QtCore, QtGui$/;"	kind:namespace	line:6
-Sample	../python/monkdata.py	/^class Sample:$/;"	kind:class	line:1
-TreeLeaf	../python/dtree.py	/^class TreeLeaf:$/;"	kind:class	line:73
-TreeNode	../python/dtree.py	/^class TreeNode:$/;"	kind:class	line:57
-__init__	../python/drawtree_qt4.py	/^    def __init__(self, parent, tree):$/;"	kind:member	line:8
-__init__	../python/drawtree_qt4.py	/^    def __init__(self, tree):$/;"	kind:member	line:57
-__init__	../python/drawtree_qt5.py	/^    def __init__(self, parent, tree):$/;"	kind:member	line:11
-__init__	../python/drawtree_qt5.py	/^    def __init__(self, tree):$/;"	kind:member	line:58
-__init__	../python/dtree.py	/^    def __init__(self, attribute, branches, default):$/;"	kind:member	line:60
-__init__	../python/dtree.py	/^    def __init__(self, cvalue):$/;"	kind:member	line:76
-__init__	../python/monkdata.py	/^    def __init__(self, name, values):$/;"	kind:member	line:13
-__init__	../python/monkdata.py	/^    def __init__(self, positive, values, identity):$/;"	kind:member	line:4
-__init__.py	../python/__init__.py	1;"	kind:file	line:1
-__repr__	../python/dtree.py	/^    def __repr__(self):$/;"	kind:member	line:65
-__repr__	../python/dtree.py	/^    def __repr__(self):$/;"	kind:member	line:79
-__repr__	../python/monkdata.py	/^    def __repr__(self):$/;"	kind:member	line:17
-allNegative	../python/dtree.py	/^def allNegative(dataset):$/;"	kind:function	line:45
-allPositive	../python/dtree.py	/^def allPositive(dataset):$/;"	kind:function	line:40
-allPruned	../python/dtree.py	/^def allPruned(tree):$/;"	kind:function	line:124
-allPruned	../solution.py	/^from python.dtree import entropy, averageGain, select, buildTree, check, allPruned$/;"	kind:namespace	line:3
-assignment_1	../solution.py	/^def assignment_1():$/;"	kind:function	line:16
-assignment_3	../solution.py	/^def assignment_3():$/;"	kind:function	line:32
-assignment_5	../solution.py	/^def assignment_5():$/;"	kind:function	line:45
-assignment_7	../solution.py	/^def assignment_7():$/;"	kind:function	line:79
-attributes	../python/monkdata.py	/^attributes = (Attribute('A1', (1, 2, 3)),$/;"	kind:variable	line:21
-attributes	../solution.py	/^from python.monkdata import monk1, monk1test, monk2, monk2test, monk3, monk3test, attributes$/;"	kind:namespace	line:2
-averageGain	../python/dtree.py	/^def averageGain(dataset, attribute):$/;"	kind:function	line:15
-averageGain	../solution.py	/^from python.dtree import entropy, averageGain, select, buildTree, check, allPruned$/;"	kind:namespace	line:3
-bestAttribute	../python/dtree.py	/^def bestAttribute(dataset, attributes):$/;"	kind:function	line:34
-buildBranch	../python/dtree.py	/^    def buildBranch(dataset, default, attributes):$/;"	kind:function	line:89
-buildTree	../python/dtree.py	/^def buildTree(dataset, attributes, maxdepth=1000000):$/;"	kind:function	line:86
-buildTree	../solution.py	/^from python.dtree import entropy, averageGain, select, buildTree, check, allPruned$/;"	kind:namespace	line:3
-check	../python/dtree.py	/^def check(tree, testdata):$/;"	kind:function	line:115
-check	../solution.py	/^from python.dtree import entropy, averageGain, select, buildTree, check, allPruned$/;"	kind:namespace	line:3
-classify	../python/dtree.py	/^def classify(tree, sample):$/;"	kind:function	line:108
-draw	../python/drawtree_qt4.py	/^def draw(p, t, x, y):$/;"	kind:function	line:38
-draw	../python/drawtree_qt5.py	/^def draw(p, t, x, y):$/;"	kind:function	line:39
-drawTree	../python/drawtree_qt4.py	/^def drawTree(tree):$/;"	kind:function	line:67
-drawTree	../python/drawtree_qt5.py	/^def drawTree(tree):$/;"	kind:function	line:65
-drawTree	../solution.py	/^from python.drawtree_qt5 import drawTree$/;"	kind:namespace	line:4
-drawtree_qt4.py	../python/drawtree_qt4.py	1;"	kind:file	line:1
-drawtree_qt5.py	../python/drawtree_qt5.py	1;"	kind:file	line:1
-dtree	../python/drawtree_qt4.py	/^import dtree$/;"	kind:namespace	line:3
-dtree	../python/drawtree_qt5.py	/^import python.dtree as dtree$/;"	kind:namespace	line:3
-dtree.py	../python/dtree.py	1;"	kind:file	line:1
-entropy	../python/dtree.py	/^def entropy(dataset):$/;"	kind:function	line:4
-entropy	../solution.py	/^from python.dtree import entropy, averageGain, select, buildTree, check, allPruned$/;"	kind:namespace	line:3
-get_local_opt	../solution.py	/^    def get_local_opt(tp):$/;"	kind:function	line:60
-log2	../python/dtree.py	/^def log2(x):$/;"	kind:function	line:24
-math	../python/dtree.py	/^import math$/;"	kind:namespace	line:1
-monk1	../python/monkdata.py	/^monk1 = ($/;"	kind:variable	line:29
-monk1	../solution.py	/^from python.monkdata import monk1, monk1test, monk2, monk2test, monk3, monk3test, attributes$/;"	kind:namespace	line:2
-monk1test	../python/monkdata.py	/^monk1test = ($/;"	kind:variable	line:155
-monk1test	../solution.py	/^from python.monkdata import monk1, monk1test, monk2, monk2test, monk3, monk3test, attributes$/;"	kind:namespace	line:2
-monk2	../python/monkdata.py	/^monk2 = ($/;"	kind:variable	line:589
-monk2	../solution.py	/^from python.monkdata import monk1, monk1test, monk2, monk2test, monk3, monk3test, attributes$/;"	kind:namespace	line:2
-monk2test	../python/monkdata.py	/^monk2test = ($/;"	kind:variable	line:760
-monk2test	../solution.py	/^from python.monkdata import monk1, monk1test, monk2, monk2test, monk3, monk3test, attributes$/;"	kind:namespace	line:2
-monk3	../python/monkdata.py	/^monk3 = ($/;"	kind:variable	line:1194
-monk3	../solution.py	/^from python.monkdata import monk1, monk1test, monk2, monk2test, monk3, monk3test, attributes$/;"	kind:namespace	line:2
-monk3test	../python/monkdata.py	/^monk3test = ($/;"	kind:variable	line:1318
-monk3test	../solution.py	/^from python.monkdata import monk1, monk1test, monk2, monk2test, monk3, monk3test, attributes$/;"	kind:namespace	line:2
-monkdata.py	../python/monkdata.py	1;"	kind:file	line:1
-mostCommon	../python/dtree.py	/^def mostCommon(dataset):$/;"	kind:function	line:50
-optimum_prune	../solution.py	/^def optimum_prune(tree, val_data):$/;"	kind:function	line:58
-paintEvent	../python/drawtree_qt4.py	/^    def paintEvent(self, ev):$/;"	kind:member	line:28
-paintEvent	../python/drawtree_qt5.py	/^    def paintEvent(self, ev):$/;"	kind:member	line:31
-partition	../solution.py	/^def partition(data, fraction):$/;"	kind:function	line:7
-python	../python/drawtree_qt5.py	/^import python.dtree as dtree$/;"	kind:namespace	line:3
-random	../solution.py	/^import random$/;"	kind:namespace	line:5
-resizeEvent	../python/drawtree_qt4.py	/^    def resizeEvent(self, ev):$/;"	kind:member	line:17
-resizeEvent	../python/drawtree_qt5.py	/^    def resizeEvent(self, ev):$/;"	kind:member	line:20
-select	../python/dtree.py	/^def select(dataset, attribute, value):$/;"	kind:function	line:29
-select	../solution.py	/^from python.dtree import entropy, averageGain, select, buildTree, check, allPruned$/;"	kind:namespace	line:3
-sizeHint	../python/drawtree_qt4.py	/^    def sizeHint(self):$/;"	kind:member	line:14
-sizeHint	../python/drawtree_qt5.py	/^    def sizeHint(self):$/;"	kind:member	line:17
-solution.py	../solution.py	1;"	kind:file	line:1
-sys	../python/drawtree_qt4.py	/^import sys$/;"	kind:namespace	line:4
-sys	../python/drawtree_qt5.py	/^import sys$/;"	kind:namespace	line:4
-xscale	../python/drawtree_qt4.py	/^    def xscale(self, x1, x2):$/;"	kind:member	line:22
-xscale	../python/drawtree_qt5.py	/^    def xscale(self, x1, x2):$/;"	kind:member	line:25
-yscale	../python/drawtree_qt4.py	/^    def yscale(self, y):$/;"	kind:member	line:25
-yscale	../python/drawtree_qt5.py	/^    def yscale(self, y):$/;"	kind:member	line:28
+Attribute	../Lab_1/python/monkdata.py	/^class Attribute:$/;"	kind:class	line:10
+MyMainWindow	../Lab_1/python/drawtree_qt4.py	/^class MyMainWindow( QtGui.QMainWindow ):$/;"	kind:class	line:56
+MyMainWindow	../Lab_1/python/drawtree_qt5.py	/^class MyMainWindow( QMainWindow ):$/;"	kind:class	line:57
+MyPainting	../Lab_1/python/drawtree_qt4.py	/^class MyPainting(QtGui.QWidget):$/;"	kind:class	line:7
+MyPainting	../Lab_1/python/drawtree_qt5.py	/^class MyPainting(QWidget):$/;"	kind:class	line:10
+PrettyPrinter	../Lab_1/solution.py	/^from pprint import PrettyPrinter$/;"	kind:namespace	line:7
+QApplication	../Lab_1/python/drawtree_qt5.py	/^from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow$/;"	kind:namespace	line:7
+QMainWindow	../Lab_1/python/drawtree_qt5.py	/^from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow$/;"	kind:namespace	line:7
+QWidget	../Lab_1/python/drawtree_qt5.py	/^from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow$/;"	kind:namespace	line:7
+Qt	../Lab_1/python/drawtree_qt4.py	/^from PyQt4 import Qt, QtCore, QtGui$/;"	kind:namespace	line:5
+QtCore	../Lab_1/python/drawtree_qt4.py	/^from PyQt4 import Qt, QtCore, QtGui$/;"	kind:namespace	line:5
+QtCore	../Lab_1/python/drawtree_qt5.py	/^from PyQt5 import QtCore, QtGui$/;"	kind:namespace	line:6
+QtGui	../Lab_1/python/drawtree_qt4.py	/^from PyQt4 import Qt, QtCore, QtGui$/;"	kind:namespace	line:5
+QtGui	../Lab_1/python/drawtree_qt5.py	/^from PyQt5 import QtCore, QtGui$/;"	kind:namespace	line:6
+Sample	../Lab_1/python/monkdata.py	/^class Sample:$/;"	kind:class	line:1
+TreeLeaf	../Lab_1/python/dtree.py	/^class TreeLeaf:$/;"	kind:class	line:73
+TreeNode	../Lab_1/python/dtree.py	/^class TreeNode:$/;"	kind:class	line:57
+__init__	../Lab_1/python/drawtree_qt4.py	/^    def __init__(self, parent, tree):$/;"	kind:member	line:8
+__init__	../Lab_1/python/drawtree_qt4.py	/^    def __init__(self, tree):$/;"	kind:member	line:57
+__init__	../Lab_1/python/drawtree_qt5.py	/^    def __init__(self, parent, tree):$/;"	kind:member	line:11
+__init__	../Lab_1/python/drawtree_qt5.py	/^    def __init__(self, tree):$/;"	kind:member	line:58
+__init__	../Lab_1/python/dtree.py	/^    def __init__(self, attribute, branches, default):$/;"	kind:member	line:60
+__init__	../Lab_1/python/dtree.py	/^    def __init__(self, cvalue):$/;"	kind:member	line:76
+__init__	../Lab_1/python/monkdata.py	/^    def __init__(self, name, values):$/;"	kind:member	line:13
+__init__	../Lab_1/python/monkdata.py	/^    def __init__(self, positive, values, identity):$/;"	kind:member	line:4
+__init__.py	../Lab_1/python/__init__.py	1;"	kind:file	line:1
+__repr__	../Lab_1/python/dtree.py	/^    def __repr__(self):$/;"	kind:member	line:65
+__repr__	../Lab_1/python/dtree.py	/^    def __repr__(self):$/;"	kind:member	line:79
+__repr__	../Lab_1/python/monkdata.py	/^    def __repr__(self):$/;"	kind:member	line:17
+allNegative	../Lab_1/python/dtree.py	/^def allNegative(dataset):$/;"	kind:function	line:45
+allPositive	../Lab_1/python/dtree.py	/^def allPositive(dataset):$/;"	kind:function	line:40
+allPruned	../Lab_1/python/dtree.py	/^def allPruned(tree):$/;"	kind:function	line:124
+allPruned	../Lab_1/solution.py	/^from python.dtree import entropy, averageGain, select, buildTree, check, allPruned$/;"	kind:namespace	line:3
+assignment_1	../Lab_1/solution.py	/^def assignment_1():$/;"	kind:function	line:18
+assignment_3	../Lab_1/solution.py	/^def assignment_3():$/;"	kind:function	line:34
+assignment_5	../Lab_1/solution.py	/^def assignment_5():$/;"	kind:function	line:47
+assignment_7	../Lab_1/solution.py	/^def assignment_7():$/;"	kind:function	line:87
+attributes	../Lab_1/python/monkdata.py	/^attributes = (Attribute('A1', (1, 2, 3)),$/;"	kind:variable	line:21
+attributes	../Lab_1/solution.py	/^from python.monkdata import monk1, monk1test, monk2, monk2test, monk3, monk3test, attributes$/;"	kind:namespace	line:2
+averageGain	../Lab_1/python/dtree.py	/^def averageGain(dataset, attribute):$/;"	kind:function	line:15
+averageGain	../Lab_1/solution.py	/^from python.dtree import entropy, averageGain, select, buildTree, check, allPruned$/;"	kind:namespace	line:3
+bestAttribute	../Lab_1/python/dtree.py	/^def bestAttribute(dataset, attributes):$/;"	kind:function	line:34
+buildBranch	../Lab_1/python/dtree.py	/^    def buildBranch(dataset, default, attributes):$/;"	kind:function	line:89
+buildTree	../Lab_1/python/dtree.py	/^def buildTree(dataset, attributes, maxdepth=1000000):$/;"	kind:function	line:86
+buildTree	../Lab_1/solution.py	/^from python.dtree import entropy, averageGain, select, buildTree, check, allPruned$/;"	kind:namespace	line:3
+check	../Lab_1/python/dtree.py	/^def check(tree, testdata):$/;"	kind:function	line:115
+check	../Lab_1/solution.py	/^from python.dtree import entropy, averageGain, select, buildTree, check, allPruned$/;"	kind:namespace	line:3
+classify	../Lab_1/python/dtree.py	/^def classify(tree, sample):$/;"	kind:function	line:108
+draw	../Lab_1/python/drawtree_qt4.py	/^def draw(p, t, x, y):$/;"	kind:function	line:38
+draw	../Lab_1/python/drawtree_qt5.py	/^def draw(p, t, x, y):$/;"	kind:function	line:39
+drawTree	../Lab_1/python/drawtree_qt4.py	/^def drawTree(tree):$/;"	kind:function	line:67
+drawTree	../Lab_1/python/drawtree_qt5.py	/^def drawTree(tree):$/;"	kind:function	line:65
+drawTree	../Lab_1/solution.py	/^from python.drawtree_qt5 import drawTree$/;"	kind:namespace	line:4
+drawtree_qt4.py	../Lab_1/python/drawtree_qt4.py	1;"	kind:file	line:1
+drawtree_qt5.py	../Lab_1/python/drawtree_qt5.py	1;"	kind:file	line:1
+dtree	../Lab_1/python/drawtree_qt4.py	/^import dtree$/;"	kind:namespace	line:3
+dtree	../Lab_1/python/drawtree_qt5.py	/^import python.dtree as dtree$/;"	kind:namespace	line:3
+dtree.py	../Lab_1/python/dtree.py	1;"	kind:file	line:1
+entropy	../Lab_1/python/dtree.py	/^def entropy(dataset):$/;"	kind:function	line:4
+entropy	../Lab_1/solution.py	/^from python.dtree import entropy, averageGain, select, buildTree, check, allPruned$/;"	kind:namespace	line:3
+get_local_opt	../Lab_1/solution.py	/^    def get_local_opt(tp):$/;"	kind:function	line:66
+log2	../Lab_1/python/dtree.py	/^def log2(x):$/;"	kind:function	line:24
+math	../Lab_1/python/dtree.py	/^import math$/;"	kind:namespace	line:1
+monk1	../Lab_1/python/monkdata.py	/^monk1 = ($/;"	kind:variable	line:29
+monk1	../Lab_1/solution.py	/^from python.monkdata import monk1, monk1test, monk2, monk2test, monk3, monk3test, attributes$/;"	kind:namespace	line:2
+monk1test	../Lab_1/python/monkdata.py	/^monk1test = ($/;"	kind:variable	line:155
+monk1test	../Lab_1/solution.py	/^from python.monkdata import monk1, monk1test, monk2, monk2test, monk3, monk3test, attributes$/;"	kind:namespace	line:2
+monk2	../Lab_1/python/monkdata.py	/^monk2 = ($/;"	kind:variable	line:589
+monk2	../Lab_1/solution.py	/^from python.monkdata import monk1, monk1test, monk2, monk2test, monk3, monk3test, attributes$/;"	kind:namespace	line:2
+monk2test	../Lab_1/python/monkdata.py	/^monk2test = ($/;"	kind:variable	line:760
+monk2test	../Lab_1/solution.py	/^from python.monkdata import monk1, monk1test, monk2, monk2test, monk3, monk3test, attributes$/;"	kind:namespace	line:2
+monk3	../Lab_1/python/monkdata.py	/^monk3 = ($/;"	kind:variable	line:1194
+monk3	../Lab_1/solution.py	/^from python.monkdata import monk1, monk1test, monk2, monk2test, monk3, monk3test, attributes$/;"	kind:namespace	line:2
+monk3test	../Lab_1/python/monkdata.py	/^monk3test = ($/;"	kind:variable	line:1318
+monk3test	../Lab_1/solution.py	/^from python.monkdata import monk1, monk1test, monk2, monk2test, monk3, monk3test, attributes$/;"	kind:namespace	line:2
+monkdata.py	../Lab_1/python/monkdata.py	1;"	kind:file	line:1
+mostCommon	../Lab_1/python/dtree.py	/^def mostCommon(dataset):$/;"	kind:function	line:50
+optimum_prune	../Lab_1/solution.py	/^def optimum_prune(tree, val_data):$/;"	kind:function	line:64
+paintEvent	../Lab_1/python/drawtree_qt4.py	/^    def paintEvent(self, ev):$/;"	kind:member	line:28
+paintEvent	../Lab_1/python/drawtree_qt5.py	/^    def paintEvent(self, ev):$/;"	kind:member	line:31
+partition	../Lab_1/solution.py	/^def partition(data, fraction):$/;"	kind:function	line:9
+python	../Lab_1/python/drawtree_qt5.py	/^import python.dtree as dtree$/;"	kind:namespace	line:3
+random	../Lab_1/solution.py	/^import random$/;"	kind:namespace	line:6
+resizeEvent	../Lab_1/python/drawtree_qt4.py	/^    def resizeEvent(self, ev):$/;"	kind:member	line:17
+resizeEvent	../Lab_1/python/drawtree_qt5.py	/^    def resizeEvent(self, ev):$/;"	kind:member	line:20
+select	../Lab_1/python/dtree.py	/^def select(dataset, attribute, value):$/;"	kind:function	line:29
+select	../Lab_1/solution.py	/^from python.dtree import entropy, averageGain, select, buildTree, check, allPruned$/;"	kind:namespace	line:3
+sizeHint	../Lab_1/python/drawtree_qt4.py	/^    def sizeHint(self):$/;"	kind:member	line:14
+sizeHint	../Lab_1/python/drawtree_qt5.py	/^    def sizeHint(self):$/;"	kind:member	line:17
+solution.py	../Lab_1/solution.py	1;"	kind:file	line:1
+statistics	../Lab_1/solution.py	/^import statistics$/;"	kind:namespace	line:5
+sys	../Lab_1/python/drawtree_qt4.py	/^import sys$/;"	kind:namespace	line:4
+sys	../Lab_1/python/drawtree_qt5.py	/^import sys$/;"	kind:namespace	line:4
+xscale	../Lab_1/python/drawtree_qt4.py	/^    def xscale(self, x1, x2):$/;"	kind:member	line:22
+xscale	../Lab_1/python/drawtree_qt5.py	/^    def xscale(self, x1, x2):$/;"	kind:member	line:25
+yscale	../Lab_1/python/drawtree_qt4.py	/^    def yscale(self, y):$/;"	kind:member	line:25
+yscale	../Lab_1/python/drawtree_qt5.py	/^    def yscale(self, y):$/;"	kind:member	line:28
