@@ -135,8 +135,10 @@ def assignment_7():
     plt.figure()
     plt.errorbar(fractions, [e[0] for e in y_monk1], yerr=[e[1] for e in y_monk1], fmt='or', capsize=5, label='MONK-1')
     plt.errorbar(fractions, [e[0] for e in y_monk3], yerr=[e[1] for e in y_monk3], fmt='ob', capsize=5, label='MONK-3')
+    plt.xlabel('Pruning fraction size')
+    plt.ylabel('Classification error')
     plt.legend()
-    plt.title('Error vs. fraction size')
+    plt.title('Error vs. fraction size (mean of {} samples, errorbars represent one standard deviation)'.format(samples))
     plt.show()
 
 if __name__ == '__main__':
