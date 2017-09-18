@@ -20,9 +20,9 @@ def partition(data, fraction):
 def assignment_1():
     print("*** ASSIGNMENT 1 ***")
 
-    e_m1 = entropy(monk1test)
-    e_m2 = entropy(monk2test)
-    e_m3 = entropy(monk3test)
+    e_m1 = entropy(monk1)
+    e_m2 = entropy(monk2)
+    e_m3 = entropy(monk3)
 
     print(
         """Entropies:
@@ -91,7 +91,7 @@ def assignment_7():
     print("*** ASSIGNMENT 7 ***")
     
     samples = 100
-    fractions = (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
+    fractions = (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.925, 0.95, 0.99)
     datasets = {
         'monk1' : {
             'training': monk1,
@@ -135,7 +135,7 @@ def assignment_7():
     plt.figure()
     plt.errorbar(fractions, [e[0] for e in y_monk1], yerr=[e[1] for e in y_monk1], fmt='or', capsize=5, label='MONK-1')
     plt.errorbar(fractions, [e[0] for e in y_monk3], yerr=[e[1] for e in y_monk3], fmt='ob', capsize=5, label='MONK-3')
-    plt.xlabel('Pruning fraction size')
+    plt.xlabel('Pruning fraction size (relative size of training set)')
     plt.ylabel('Classification error')
     plt.legend()
     plt.title('Error vs. fraction size (mean of {} samples, errorbars represent one standard deviation)'.format(samples))

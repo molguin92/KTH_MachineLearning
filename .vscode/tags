@@ -9,7 +9,7 @@ MyMainWindow	../Lab_1/python/drawtree_qt4.py	/^class MyMainWindow( QtGui.QMainWi
 MyMainWindow	../Lab_1/python/drawtree_qt5.py	/^class MyMainWindow( QMainWindow ):$/;"	kind:class	line:57
 MyPainting	../Lab_1/python/drawtree_qt4.py	/^class MyPainting(QtGui.QWidget):$/;"	kind:class	line:7
 MyPainting	../Lab_1/python/drawtree_qt5.py	/^class MyPainting(QWidget):$/;"	kind:class	line:10
-PrettyPrinter	../Lab_1/solution.py	/^from pprint import PrettyPrinter$/;"	kind:namespace	line:7
+PrettyPrinter	../Lab_1/solution.py	/^from pprint import PrettyPrinter$/;"	kind:namespace	line:6
 QApplication	../Lab_1/python/drawtree_qt5.py	/^from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow$/;"	kind:namespace	line:7
 QMainWindow	../Lab_1/python/drawtree_qt5.py	/^from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow$/;"	kind:namespace	line:7
 QWidget	../Lab_1/python/drawtree_qt5.py	/^from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow$/;"	kind:namespace	line:7
@@ -37,10 +37,10 @@ allNegative	../Lab_1/python/dtree.py	/^def allNegative(dataset):$/;"	kind:functi
 allPositive	../Lab_1/python/dtree.py	/^def allPositive(dataset):$/;"	kind:function	line:40
 allPruned	../Lab_1/python/dtree.py	/^def allPruned(tree):$/;"	kind:function	line:124
 allPruned	../Lab_1/solution.py	/^from python.dtree import entropy, averageGain, select, buildTree, check, allPruned$/;"	kind:namespace	line:3
-assignment_1	../Lab_1/solution.py	/^def assignment_1():$/;"	kind:function	line:18
-assignment_3	../Lab_1/solution.py	/^def assignment_3():$/;"	kind:function	line:34
-assignment_5	../Lab_1/solution.py	/^def assignment_5():$/;"	kind:function	line:47
-assignment_7	../Lab_1/solution.py	/^def assignment_7():$/;"	kind:function	line:87
+assignment_1	../Lab_1/solution.py	/^def assignment_1():$/;"	kind:function	line:20
+assignment_3	../Lab_1/solution.py	/^def assignment_3():$/;"	kind:function	line:36
+assignment_5	../Lab_1/solution.py	/^def assignment_5():$/;"	kind:function	line:49
+assignment_7	../Lab_1/solution.py	/^def assignment_7():$/;"	kind:function	line:89
 attributes	../Lab_1/python/monkdata.py	/^attributes = (Attribute('A1', (1, 2, 3)),$/;"	kind:variable	line:21
 attributes	../Lab_1/solution.py	/^from python.monkdata import monk1, monk1test, monk2, monk2test, monk3, monk3test, attributes$/;"	kind:namespace	line:2
 averageGain	../Lab_1/python/dtree.py	/^def averageGain(dataset, attribute):$/;"	kind:function	line:15
@@ -64,9 +64,10 @@ dtree	../Lab_1/python/drawtree_qt5.py	/^import python.dtree as dtree$/;"	kind:na
 dtree.py	../Lab_1/python/dtree.py	1;"	kind:file	line:1
 entropy	../Lab_1/python/dtree.py	/^def entropy(dataset):$/;"	kind:function	line:4
 entropy	../Lab_1/solution.py	/^from python.dtree import entropy, averageGain, select, buildTree, check, allPruned$/;"	kind:namespace	line:3
-get_local_opt	../Lab_1/solution.py	/^    def get_local_opt(tp):$/;"	kind:function	line:66
+get_local_opt	../Lab_1/solution.py	/^    def get_local_opt(tp):$/;"	kind:function	line:68
 log2	../Lab_1/python/dtree.py	/^def log2(x):$/;"	kind:function	line:24
 math	../Lab_1/python/dtree.py	/^import math$/;"	kind:namespace	line:1
+matplotlib	../Lab_1/solution.py	/^import matplotlib.pyplot as plt$/;"	kind:namespace	line:8
 monk1	../Lab_1/python/monkdata.py	/^monk1 = ($/;"	kind:variable	line:29
 monk1	../Lab_1/solution.py	/^from python.monkdata import monk1, monk1test, monk2, monk2test, monk3, monk3test, attributes$/;"	kind:namespace	line:2
 monk1test	../Lab_1/python/monkdata.py	/^monk1test = ($/;"	kind:variable	line:155
@@ -81,12 +82,14 @@ monk3test	../Lab_1/python/monkdata.py	/^monk3test = ($/;"	kind:variable	line:131
 monk3test	../Lab_1/solution.py	/^from python.monkdata import monk1, monk1test, monk2, monk2test, monk3, monk3test, attributes$/;"	kind:namespace	line:2
 monkdata.py	../Lab_1/python/monkdata.py	1;"	kind:file	line:1
 mostCommon	../Lab_1/python/dtree.py	/^def mostCommon(dataset):$/;"	kind:function	line:50
-optimum_prune	../Lab_1/solution.py	/^def optimum_prune(tree, val_data):$/;"	kind:function	line:64
+np	../Lab_1/solution.py	/^import numpy as np$/;"	kind:namespace	line:7
+optimum_prune	../Lab_1/solution.py	/^def optimum_prune(tree, val_data):$/;"	kind:function	line:66
 paintEvent	../Lab_1/python/drawtree_qt4.py	/^    def paintEvent(self, ev):$/;"	kind:member	line:28
 paintEvent	../Lab_1/python/drawtree_qt5.py	/^    def paintEvent(self, ev):$/;"	kind:member	line:31
-partition	../Lab_1/solution.py	/^def partition(data, fraction):$/;"	kind:function	line:9
+partition	../Lab_1/solution.py	/^def partition(data, fraction):$/;"	kind:function	line:11
+plt	../Lab_1/solution.py	/^import matplotlib.pyplot as plt$/;"	kind:namespace	line:8
 python	../Lab_1/python/drawtree_qt5.py	/^import python.dtree as dtree$/;"	kind:namespace	line:3
-random	../Lab_1/solution.py	/^import random$/;"	kind:namespace	line:6
+random	../Lab_1/solution.py	/^import random$/;"	kind:namespace	line:5
 resizeEvent	../Lab_1/python/drawtree_qt4.py	/^    def resizeEvent(self, ev):$/;"	kind:member	line:17
 resizeEvent	../Lab_1/python/drawtree_qt5.py	/^    def resizeEvent(self, ev):$/;"	kind:member	line:20
 select	../Lab_1/python/dtree.py	/^def select(dataset, attribute, value):$/;"	kind:function	line:29
@@ -94,7 +97,6 @@ select	../Lab_1/solution.py	/^from python.dtree import entropy, averageGain, sel
 sizeHint	../Lab_1/python/drawtree_qt4.py	/^    def sizeHint(self):$/;"	kind:member	line:14
 sizeHint	../Lab_1/python/drawtree_qt5.py	/^    def sizeHint(self):$/;"	kind:member	line:17
 solution.py	../Lab_1/solution.py	1;"	kind:file	line:1
-statistics	../Lab_1/solution.py	/^import statistics$/;"	kind:namespace	line:5
 sys	../Lab_1/python/drawtree_qt4.py	/^import sys$/;"	kind:namespace	line:4
 sys	../Lab_1/python/drawtree_qt5.py	/^import sys$/;"	kind:namespace	line:4
 xscale	../Lab_1/python/drawtree_qt4.py	/^    def xscale(self, x1, x2):$/;"	kind:member	line:22
