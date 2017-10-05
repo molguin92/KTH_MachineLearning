@@ -1,22 +1,31 @@
-from cvxopt.solvers import qp
+import math
+from pprint import PrettyPrinter
+from typing import Callable, List, Tuple
+
+import numpy
 from cvxopt.base import matrix
-import numpy, random, math
+from cvxopt.solvers import qp
 from matplotlib import pylab
+
 import generate
 
-from typing import List, Callable, Tuple
-
 FLOAT_THRESHOLD = 10.0 ** (-5)
+print = PrettyPrinter(indent=4).pprint
+
+
+def dot_product(x: tuple, y: tuple) -> float:
+    assert len(x) == len(y)
+    res = 0.0
+    for i, j in zip(x, y):
+        res += i * j
+
+    return res
 
 
 def poly_kernel(x: tuple, y: tuple, d: int) -> float:
     assert len(x) == len(y)
-
-    sum = 0.0
-    for i, j in zip(x, y):
-        sum += i * j
-
-    result = math.pow(sum + 1.0, d)
+    dot = dot_product(x, y)
+    result = math.pow(dot + 1.0, d)
     return result
 
 
@@ -26,7 +35,6 @@ def linear_kernel(x: tuple, y: tuple) -> float:
 
 def radial_kernel(x: tuple, y: tuple, gamma: float) -> float:
     assert len(x) == len(y)
-
     sum = 0.0
     for i, j in zip(x, y):
         sum += math.pow(i - j, 2)
@@ -34,8 +42,19 @@ def radial_kernel(x: tuple, y: tuple, gamma: float) -> float:
     return math.exp(-1.0 * gamma * sum)
 
 
+def sigmoid_kernel(x: tuple, y: tuple, k: float, delta: float) -> float:
+    assert len(x) == len(y)
+    dot = dot_product(x, y)
+    res = math.tanh((k * dot) - delta)
+    return res
+
+
 def train(training_data: List[Tuple[float, float, float]],
-          kernel: Callable = linear_kernel) -> Callable:
+          kernel: Callable = linear_kernel, slack: bool = False,
+          C: float = None) -> Callable:
+    if slack:
+        assert C
+
     X = [(e[0], e[1]) for e in training_data]
     T = [e[2] for e in training_data]
     N = len(training_data)
@@ -46,27 +65,35 @@ def train(training_data: List[Tuple[float, float, float]],
         for j in range(N):
             P[i][j] = T[i] * T[j] * kernel(X[i], X[j])
 
-    print('P: ', P)
-
     # build q
     q = numpy.ones(N) * -1
-    print('q: ', q)
 
     # build h
-    h = numpy.zeros(N)
-    print('h: ', h)
+    h = None
+    if slack:
+        h = numpy.empty(2 * N)
+        for i in range(N):
+            h[i] = 0
+        for i in range(N, 2 * N):
+            h[i] = C
+    else:
+        h = numpy.zeros(N)
 
     # build G
-    G = numpy.zeros(shape=(N, N))
+    G = numpy.zeros(shape=(2 * N, N)) if slack else numpy.zeros(shape=(N, N))
     for i, j in zip(range(N), range(N)):
         G[i][j] = -1
+
+    if slack:
+        for i, j in zip(range(N, 2 * N), range(N)):
+            G[i][j] = 1
 
     r = qp(matrix(P), matrix(q), matrix(G), matrix(h))
     alpha = list(r['x'])
 
     # get all non-zero alphas and corresponding points and classes
     alpha_nz = []
-    for i in range(N):
+    for i in range(len(alpha)):
         if alpha[i] >= FLOAT_THRESHOLD:
             alpha_nz.append((alpha[i], X[i], T[i]))
 
@@ -80,17 +107,18 @@ def train(training_data: List[Tuple[float, float, float]],
 
 
 if __name__ == '__main__':
-    data = generate.generate()
-    indicator = train(data, kernel=lambda x, y: radial_kernel(x, y, 1))
+    data = generate.generate(points=50)
+    indicator = train(data,
+                      kernel=lambda x, y: radial_kernel(x, y, 3),
+                      slack=True, C=5)
 
-    xrange = numpy.arange(-4, 4, 0.05)
-    yrange = numpy.arange(-4, 4, 0.05)
+    xrange = numpy.arange(-8, 8, 0.05)
+    yrange = numpy.arange(-8, 8, 0.05)
 
     p_grid = [[indicator((x, y)) for y in yrange] for x in xrange]
-    print(p_grid)
     grid = matrix(p_grid)
 
-    pylab.hold(True)
+    # pylab.hold(True)
     pylab.plot([p[0] for p in data if p[2] > 0],
                [p[1] for p in data if p[2] > 0], 'bo')
     pylab.plot([p[0] for p in data if p[2] < 0],
