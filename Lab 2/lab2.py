@@ -106,12 +106,9 @@ def train(training_data: List[Tuple[float, float, float]],
     return indicator
 
 
-if __name__ == '__main__':
-    data = generate.generate(points=50)
-    indicator = train(data,
-                      kernel=lambda x, y: radial_kernel(x, y, 3),
-                      slack=False, C=5)
-
+def plot_classification(dataset: generate.DATASET,
+                        kernel: Callable, slack=False, C=5):
+    indicator = train(dataset, kernel, slack, C)
     xrange = numpy.arange(-8, 8, 0.05)
     yrange = numpy.arange(-8, 8, 0.05)
 
@@ -119,10 +116,33 @@ if __name__ == '__main__':
     grid = matrix(p_grid)
 
     # pylab.hold(True)
-    pylab.plot([p[0] for p in data if p[2] > 0],
-               [p[1] for p in data if p[2] > 0], 'bo')
-    pylab.plot([p[0] for p in data if p[2] < 0],
-               [p[1] for p in data if p[2] < 0], 'ro')
+    pylab.plot([p[0] for p in dataset if p[2] > 0],
+               [p[1] for p in dataset if p[2] > 0], 'bo')
+    pylab.plot([p[0] for p in dataset if p[2] < 0],
+               [p[1] for p in dataset if p[2] < 0], 'ro')
     pylab.contour(xrange, yrange, grid, (-1.0, 0.0, 1.0),
                   colors=('red', 'black', 'blue'), linewidths=(1, 1, 1))
     pylab.show()
+
+
+if __name__ == '__main__':
+    # datasets = generate.generate3(points=25)
+    # kernels = (
+    #    linear_kernel,
+    #    lambda x, y: poly_kernel(x, y, 4),
+    #    lambda x, y: radial_kernel(x, y, 0.54)
+    #    #lambda x, y: sigmoid_kernel(x, y, 0.1, 0.3)
+    # )
+
+    # for d in datasets:
+    #    for k in kernels:
+    #        continue
+    # plot_classification(d, k)
+
+    # dataset = generate.generate(points=25)
+    # for g in range(2, 10, 2):
+    #    plot_classification(dataset, lambda x, y: radial_kernel(x, y, g))
+
+    data = generate.generate(points=25)
+    for p in range(5, 10):
+        plot_classification(data, lambda x, y: poly_kernel(x, y, p))
