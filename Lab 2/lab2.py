@@ -110,7 +110,7 @@ if __name__ == '__main__':
     data = generate.generate(points=50)
     indicator = train(data,
                       kernel=lambda x, y: radial_kernel(x, y, 3),
-                      slack=True, C=5)
+                      slack=False, C=5)
 
     xrange = numpy.arange(-8, 8, 0.05)
     yrange = numpy.arange(-8, 8, 0.05)
