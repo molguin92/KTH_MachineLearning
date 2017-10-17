@@ -26,11 +26,7 @@
 # needed libraries.
 # Check out `labfuns.py` if you are interested in the details.
 
-import random
-from imp import reload
-
-import numpy as np
-from scipy import misc
+# from imp import reload
 
 from labfuns import *
 
@@ -69,18 +65,31 @@ def computePrior(labels, W=None):
 #      sigma - C x d x d matrix of class covariances (sigma[i] - class i sigma)
 def mlParams(X, labels, W=None):
     assert (X.shape[0] == labels.shape[0])
-    Npts, Ndims = np.shape(X)
+    N, d = np.shape(X)
     classes = np.unique(labels)
-    Nclasses = np.size(classes)
+    C = np.size(classes)
 
     if W is None:
-        W = np.ones((Npts, 1)) / float(Npts)
+        W = np.ones((N, 1)) / float(N)
 
-    mu = np.zeros((Nclasses, Ndims))
-    sigma = np.zeros((Nclasses, Ndims, Ndims))
+    mu = np.zeros((C, d))
+    sigma = np.zeros((C, d, d))
 
     # TODO: fill in the code to compute mu and sigma!
     # ==========================
+
+    for i, c in enumerate(classes):
+        idx = np.where(labels == c)[0]
+        X_c = X[idx, :]
+        mu_d = np.zeros(shape=d)
+        for dim in range(d):
+            X_c_dim = X_c[:, dim]
+
+            N_k = len(X_c_dim)
+            mu_d[dim] = sum(X_c_dim) / N_k
+            sigma[i][dim][dim] = sum(np.exp2(X_c_dim - mu_d[dim])) / N_k
+
+        mu[i] = mu_d
 
     # ==========================
 
@@ -133,10 +142,10 @@ class BayesClassifier(object):
 # 
 # Call `genBlobs` and `plotGaussian` to verify your estimates.
 
-
-X, labels = genBlobs(centers=5)
-mu, sigma = mlParams(X, labels)
-plotGaussian(X, labels, mu, sigma)
+if __name__ == '__main__':
+    X, labels = genBlobs(centers=5)
+    mu, sigma = mlParams(X, labels)
+    plotGaussian(X, labels, mu, sigma)
 
 
 # Call the `testClassifier` and `plotBoundary` functions for this part.

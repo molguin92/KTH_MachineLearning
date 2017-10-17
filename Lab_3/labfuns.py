@@ -1,19 +1,16 @@
 from __future__ import absolute_import, division, print_function
 
-import random as rnd
-
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 import numpy as np
+import seaborn as sns
 from matplotlib.colors import ColorConverter
 from matplotlib.patches import Ellipse
 from numpy import genfromtxt
 from sklearn import decomposition, tree
 from sklearn.datasets.samples_generator import make_blobs
 
-
-# import seaborn as sns
-# sns.set()
+sns.set()
 
 def plot_cov_ellipse(cov, pos, nstd=2, ax=None, **kwargs):
     """
