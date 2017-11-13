@@ -1,8 +1,6 @@
 # /usr/bin/env python3
 import gc
 import numpy as np
-from scipy import sparse
-from skmultilearn.adapt import MLkNN
 from skmultilearn.problem_transform import LabelPowerset
 from sklearn.svm import LinearSVC
 from sklearn.metrics import accuracy_score
@@ -11,6 +9,9 @@ from sys import stderr
 
 n_classes = 12289
 n_labels = 9
+
+coded_output_file_prefixes = ['pos_error_0o1', 'pos_error_0o4',
+                              'pos_error_0o25', 'pos_perf']
 
 
 def time_func(func):
@@ -37,37 +38,46 @@ def process_output(output):
 
 
 @time_func
-def load_data():
-    print('Loading data from training file...')
-    data = np.loadtxt('coded_output/pos_perf_new_training_data_step_2.0.txt',
-                      dtype=int, delimiter=',', )
+def load_data(file, output_process_func=process_output):
+    print('Loading data from file:', file)
+    data = np.loadtxt(file, dtype=int, delimiter=',', )
     print('Done.')
 
-    train_in = data[:, :-n_labels]
-    train_out = data[:, -n_labels:]
+    data_in = data[:, :-n_labels]
+    data_out = data[:, -n_labels:]
 
     data = None
     gc.collect()
 
-    print('Loading data from test file...')
-    data = np.loadtxt('coded_output/pos_perf_new_test_data_step_2.0.txt',
-                      dtype=int, delimiter=',', )
-    print('Done.')
-
-    test_in = data[:, :-n_labels]
-    test_out = data[:, -n_labels:]
-
-    data = None
-    gc.collect()
-
-    return train_in, process_output(train_out), \
-           test_in, process_output(test_out)
+    return data_in, output_process_func(data_out)
 
 
 if __name__ == '__main__':
-    train_in, train_out, test_in, test_out = load_data()
-    classifier = LabelPowerset(LinearSVC())
-    time_func(classifier.fit)(train_in, train_out)
-    predictions = time_func(classifier.predict)(test_in)
 
-    print('Accuracy: {}%'.format(100.0 * accuracy_score(test_out, predictions)))
+    results = dict()
+
+    for prefix in coded_output_file_prefixes:
+        training_file = 'coded_output/' \
+                        '{}_new_training_data_step_2.0.txt'.format(prefix)
+        test_file = 'coded_output/' \
+                    '{}_new_test_data_step_2.0.txt'.format(prefix)
+
+        train_in, train_out = load_data(training_file)
+        test_in, test_out = load_data(test_file)
+
+        classifier = LabelPowerset(LinearSVC())
+        time_func(classifier.fit)(train_in, train_out)
+        predictions = time_func(classifier.predict)(test_in)
+        acc = accuracy_score(test_out, predictions)
+
+        results[prefix] = acc
+
+    print('''
+    
+--------- * ---------
+    
+Accuracy ratings per experiment:
+    ''')
+
+    for prefix, acc in results.items():
+        print('{}: {}%'.format(prefix, acc * 100.0))
