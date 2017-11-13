@@ -1,66 +1,73 @@
 # /usr/bin/env python3
+import gc
 import numpy as np
 from scipy import sparse
 from skmultilearn.adapt import MLkNN
-from skmultilearn.problem_transform import BinaryRelevance
-from sklearn.svm import SVC, OneClassSVM
+from skmultilearn.problem_transform import LabelPowerset
+from sklearn.svm import LinearSVC
+from sklearn.metrics import accuracy_score
 import time
+from sys import stderr
 
 n_classes = 12289
+n_labels = 9
 
 
-def process_output_vector(output):
-    print('Processing output vector...')
-    output_coded = sparse.lil_matrix((len(output), n_classes), dtype=int)
-    for i in range(len(output)):
-        for label in output[i]:
-            output_coded[i, label] = 1
-    print('Done.')
-    return output_coded
+def time_func(func):
+    def wrapper(*args, **kwargs):
+        print('Timing function: {}(...)'.format(func.__name__), file=stderr)
+        start_time = time.time()
+        result = func(*args, **kwargs)
+        end_time = time.time()
+        print('{}(...) total time: {} seconds'.format(func.__name__,
+                                                      end_time - start_time),
+              file=stderr)
+        return result
+
+    return wrapper
 
 
-if __name__ == '__main__':
+@time_func
+def process_output(output):
+    processed_output = np.zeros(shape=(len(output), n_classes))
+    for row in range(len(output)):
+        for label in output[row]:
+            processed_output[row, label] = 1
+    return processed_output
 
-    start_time = time.time()
 
+@time_func
+def load_data():
     print('Loading data from training file...')
     data = np.loadtxt('coded_output/pos_perf_new_training_data_step_2.0.txt',
                       dtype=int, delimiter=',', )
     print('Done.')
+
+    train_in = data[:, :-n_labels]
+    train_out = data[:, -n_labels:]
+
+    data = None
+    gc.collect()
+
     print('Loading data from test file...')
-    data_test = np.loadtxt('coded_output/pos_perf_new_test_data_step_2.0.txt',
-                           dtype=int, delimiter=',', )
+    data = np.loadtxt('coded_output/pos_perf_new_test_data_step_2.0.txt',
+                      dtype=int, delimiter=',', )
     print('Done.')
 
-    # data = data[:30,:]
+    test_in = data[:, :-n_labels]
+    test_out = data[:, -n_labels:]
 
-    output = data[:, -9:]
-    input = sparse.csr_matrix(data[:, :-9])
-    output_coded = process_output_vector(output)
+    data = None
+    gc.collect()
 
-    output_test = data_test[:, -9:]
-    input_test = sparse.csr_matrix(data_test[:, :-9])
-    output_coded_test = process_output_vector(output_test)
+    return train_in, process_output(train_out), \
+           test_in, process_output(test_out)
 
-    print('Training classifier...')
-    cf = BinaryRelevance(OneClassSVM())
-    # cf = MLkNN(k=3)
-    cf.fit(input, output_coded)
-    print('Done.')
 
-    print('Predicting:')
-    predictions = cf.predict(input_test)
+if __name__ == '__main__':
+    train_in, train_out, test_in, test_out = load_data()
+    classifier = LabelPowerset(LinearSVC())
+    time_func(classifier.fit)(train_in, train_out)
+    predictions = time_func(classifier.predict)(test_in)
 
-    correct = 0
-    total = 0
-    for i in range(predictions.shape[0]):
-        if (predictions[i] == output_coded_test[i]):
-            correct += 1
-
-        total += 1
-
-    print('Total:', total)
-    print('Correct:', correct)
-    print('Accuracy:', float(correct)/total)
-
-    print("--- %s seconds ---" % (time.time() - start_time))
+    print('Accuracy: {}%'.format(100.0 * accuracy_score(test_out, predictions)))
