@@ -3,7 +3,7 @@ import gc
 import numpy as np
 from skmultilearn.problem_transform import LabelPowerset
 from sklearn.svm import LinearSVC
-from sklearn.metrics import accuracy_score
+from sklearn.model_selection import cross_val_score
 import time
 from sys import stderr
 
@@ -16,13 +16,19 @@ coded_output_file_prefixes = ['pos_error_0o1', 'pos_error_0o4',
 
 def time_func(func):
     def wrapper(*args, **kwargs):
-        print('Timing function: {}(...)'.format(func.__name__), file=stderr)
+        stderr.write('Timing function: {}(...)'.format(func.__name__))
+        stderr.write('\n')
+        stderr.flush()
+
         start_time = time.time()
         result = func(*args, **kwargs)
         end_time = time.time()
-        print('{}(...) total time: {} seconds'.format(func.__name__,
-                                                      end_time - start_time),
-              file=stderr)
+
+        stderr.write('{}(...) total time: {} seconds'.format(func.__name__,
+                                                             end_time -
+                                                             start_time))
+        stderr.write('\n')
+        stderr.flush()
         return result
 
     return wrapper
@@ -52,8 +58,8 @@ def load_data(file, output_process_func=process_output):
     return data_in, output_process_func(data_out)
 
 
-if __name__ == '__main__':
-
+@time_func
+def main():
     results = dict()
 
     for prefix in coded_output_file_prefixes:
@@ -65,19 +71,40 @@ if __name__ == '__main__':
         train_in, train_out = load_data(training_file)
         test_in, test_out = load_data(test_file)
 
-        classifier = LabelPowerset(LinearSVC())
-        time_func(classifier.fit)(train_in, train_out)
-        predictions = time_func(classifier.predict)(test_in)
-        acc = accuracy_score(test_out, predictions)
+        total_data_in = np.vstack((train_in, test_in))
+        train_in = test_in = None
+        gc.collect()
 
-        results[prefix] = acc
+        total_data_out = np.vstack((train_out, test_out))
+        train_out = test_out = None
+        gc.collect()
+
+        classifier = LabelPowerset(LinearSVC())
+        scores = time_func(cross_val_score)(classifier,
+                                            total_data_in,
+                                            total_data_out,
+                                            cv=5)
+
+        total_data_out = total_data_in = None
+        gc.collect()
+
+        # time_func(classifier.fit)(train_in, train_out)
+        # predictions = time_func(classifier.predict)(test_in)
+        # acc = accuracy_score(test_out, predictions)
+
+
+        results[prefix] = scores.mean()
 
     print('''
-    
---------- * ---------
-    
-Accuracy ratings per experiment:
-    ''')
+
+    --------- * ---------
+
+    Accuracy ratings per experiment (mean of 5-fold cross validation):
+        ''')
 
     for prefix, acc in results.items():
         print('{}: {}%'.format(prefix, acc * 100.0))
+
+
+if __name__ == '__main__':
+    main()
