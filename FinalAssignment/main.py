@@ -10,8 +10,10 @@ from sys import stderr
 n_classes = 12289
 n_labels = 9
 
-coded_output_file_prefixes = ['pos_error_0o1', 'pos_error_0o4',
-                              'pos_error_0o25', 'pos_perf']
+coded_output_file_prefixes = [
+    # 'pos_error_0o1', 'pos_error_0o4',
+    # 'pos_error_0o25',
+    'pos_perf']
 
 
 def time_func(func):
