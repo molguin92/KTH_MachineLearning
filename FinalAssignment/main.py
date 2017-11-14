@@ -84,7 +84,7 @@ def main():
                                             total_data_in,
                                             total_data_out,
                                             cv=5,
-                                            n_jobs=4)
+                                            n_jobs=2)
 
         total_data_out = total_data_in = None
         gc.collect()
