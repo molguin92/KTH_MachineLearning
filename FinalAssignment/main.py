@@ -1,6 +1,8 @@
 # /usr/bin/env python3
+import csv
 import gc
 import numpy as np
+from sklearn.metrics import accuracy_score
 from skmultilearn.problem_transform import LabelPowerset
 from sklearn.svm import LinearSVC
 from sklearn.model_selection import cross_val_score
@@ -11,16 +13,15 @@ n_classes = 12289
 n_labels = 9
 
 coded_output_file_prefixes = [
-    # 'pos_error_0o1', 'pos_error_0o4',
-    # 'pos_error_0o25',
-    'pos_perf']
+    'pos_error_0o1', 'pos_error_0o4',
+    'pos_error_0o25', 'pos_perf']
 
 
 def time_func(func):
     def wrapper(*args, **kwargs):
-        stderr.write('Timing function: {}(...)'.format(func.__name__))
-        stderr.write('\n')
-        stderr.flush()
+        # stderr.write('Timing function: {}(...)'.format(func.__name__))
+        # stderr.write('\n')
+        # stderr.flush()
 
         start_time = time.time()
         result = func(*args, **kwargs)
@@ -61,7 +62,8 @@ def load_data(file, output_process_func=process_output):
 
 
 @time_func
-def main():
+def cross_validation(k=10):
+    print('Performing {}-fold validation on models.'.format(k))
     results = dict()
 
     for prefix in coded_output_file_prefixes:
@@ -85,7 +87,7 @@ def main():
         scores = time_func(cross_val_score)(classifier,
                                             total_data_in,
                                             total_data_out,
-                                            cv=5)
+                                            cv=k)
 
         total_data_out = total_data_in = None
         gc.collect()
@@ -95,18 +97,64 @@ def main():
         # acc = accuracy_score(test_out, predictions)
 
 
-        results[prefix] = scores.mean()
+        results[prefix] = (scores.mean(), scores.std())
 
     print('''
 
-    --------- * ---------
+--------- * ---------
 
-    Accuracy ratings per experiment (mean of 5-fold cross validation):
-        ''')
+Accuracy ratings per experiment (mean of {}-fold cross validation):
+        '''.format(k))
 
-    for prefix, acc in results.items():
-        print('{}: {}%'.format(prefix, acc * 100.0))
+    for prefix, stats in results.items():
+        print('{}: {} (std: {})'.format(prefix, stats[0], stats[1]))
+
+
+@time_func
+def learn_and_predict():
+    print('Building linear SVMs and predicting.')
+
+    accuracies = dict()
+    for prefix in coded_output_file_prefixes:
+        training_file = 'coded_output/' \
+                        '{}_new_training_data_step_2.0.txt'.format(prefix)
+        test_file = 'coded_output/' \
+                    '{}_new_test_data_step_2.0.txt'.format(prefix)
+
+        train_in, train_out = load_data(training_file)
+        test_in, test_out = load_data(test_file)
+
+        classifier = LabelPowerset(LinearSVC())
+
+        time_func(classifier.fit)(train_in, train_out)
+        train_in = train_out = None
+        gc.collect()
+
+        predictions = time_func(classifier.predict)(test_in)
+        test_in = None
+        gc.collect()
+
+        acc = accuracy_score(test_out, predictions)
+        test_out = None
+        gc.collect()
+
+        with open('results/{}_predictions.txt'.format(prefix), 'w') as f:
+            writer = csv.writer(f)
+            _pred = predictions.toarray()
+            for sample in _pred:
+                row = []
+                for i, element in enumerate(sample):
+                    if element == 1:
+                        row.append(i)
+                writer.writerow(row)
+
+        accuracies[prefix] = acc
+
+    print('Accuracies:')
+    for prefix, acc in accuracies.items():
+        print(prefix, acc)
 
 
 if __name__ == '__main__':
-    main()
+    learn_and_predict()
+    cross_validation()
