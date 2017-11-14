@@ -85,8 +85,7 @@ def main():
         scores = time_func(cross_val_score)(classifier,
                                             total_data_in,
                                             total_data_out,
-                                            cv=5,
-                                            n_jobs=2)
+                                            cv=5)
 
         total_data_out = total_data_in = None
         gc.collect()
