@@ -83,7 +83,7 @@ def cross_validation(k=10):
         train_out = test_out = None
         gc.collect()
 
-        classifier = LabelPowerset(LinearSVC())
+        classifier = LabelPowerset(LinearSVC(), require_dense=[True, False])
         scores = time_func(cross_val_score)(classifier,
                                             total_data_in,
                                             total_data_out,
