@@ -79,11 +79,12 @@ def cross_validation(k=10):
         train_in = test_in = None
         gc.collect()
 
-        total_data_out = np.vstack((train_out, test_out))
+        total_data_out = np.vstack((train_out.toarray(),
+                                    test_out.toarray()))
         train_out = test_out = None
         gc.collect()
 
-        classifier = LabelPowerset(LinearSVC(), require_dense=[True, False])
+        classifier = LabelPowerset(LinearSVC())
         scores = time_func(cross_val_score)(classifier,
                                             total_data_in,
                                             total_data_out,
