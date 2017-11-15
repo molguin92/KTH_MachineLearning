@@ -2,6 +2,7 @@
 import csv
 import gc
 import numpy as np
+from scipy.sparse import dok_matrix
 from sklearn.metrics import accuracy_score
 from skmultilearn.problem_transform import LabelPowerset
 from sklearn.svm import LinearSVC
@@ -19,10 +20,6 @@ coded_output_file_prefixes = [
 
 def time_func(func):
     def wrapper(*args, **kwargs):
-        # stderr.write('Timing function: {}(...)'.format(func.__name__))
-        # stderr.write('\n')
-        # stderr.flush()
-
         start_time = time.time()
         result = func(*args, **kwargs)
         end_time = time.time()
@@ -39,17 +36,20 @@ def time_func(func):
 
 @time_func
 def process_output(output):
-    processed_output = np.zeros(shape=(len(output), n_classes))
-    for row in range(len(output)):
-        for label in output[row]:
-            processed_output[row, label] = 1
-    return processed_output
+    processed_output = dok_matrix((len(output), n_labels * n_classes),
+                                  dtype=np.uint8)
+
+    for i, row in enumerate(output):
+        for j, label in enumerate(row):
+            processed_output[i, (j + 1) * label] = 1
+
+    return processed_output.tocoo()
 
 
 @time_func
 def load_data(file, output_process_func=process_output):
     print('Loading data from file:', file)
-    data = np.loadtxt(file, dtype=int, delimiter=',', )
+    data = np.loadtxt(file, dtype=np.uint16, delimiter=',', )
     print('Done.')
 
     data_in = data[:, :-n_labels]
@@ -92,11 +92,6 @@ def cross_validation(k=10):
         total_data_out = total_data_in = None
         gc.collect()
 
-        # time_func(classifier.fit)(train_in, train_out)
-        # predictions = time_func(classifier.predict)(test_in)
-        # acc = accuracy_score(test_out, predictions)
-
-
         results[prefix] = (scores.mean(), scores.std())
 
     print('''
@@ -138,6 +133,7 @@ def learn_and_predict():
         test_out = None
         gc.collect()
 
+        # todo: fix this:
         with open('results/{}_predictions.txt'.format(prefix), 'w') as f:
             writer = csv.writer(f)
             _pred = predictions.toarray()
@@ -156,5 +152,5 @@ def learn_and_predict():
 
 
 if __name__ == '__main__':
-    learn_and_predict()
+    # learn_and_predict()
     cross_validation()
