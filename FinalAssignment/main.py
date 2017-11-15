@@ -41,7 +41,7 @@ def process_output(output):
 
     for i, row in enumerate(output):
         for j, label in enumerate(row):
-            processed_output[i, (j + 1) * label] = 1
+            processed_output[i, (j * n_classes) + label] = 1
 
     return processed_output.tocoo()
 
@@ -153,5 +153,10 @@ def learn_and_predict():
 
 
 if __name__ == '__main__':
+    training_file = 'coded_output/' \
+                    '{}_new_training_data_step_2.0.txt'.format('pos_perf')
+    i, o = load_data(training_file)
+    print(len(np.unique(o.toarray(), axis=0)))
+
     # learn_and_predict()
-    cross_validation()
+    # cross_validation()
