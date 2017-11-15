@@ -1,0 +1,61 @@
+Building linear SVMs and predicting.
+Loading data from file: coded_output/pos_error_0o1_new_training_data_step_2.0.txt
+Done.
+Loading data from file: coded_output/pos_error_0o1_new_test_data_step_2.0.txt
+Done.
+pos_error_0o1 accuracy: 0.9625
+Loading data from file: coded_output/pos_error_0o4_new_training_data_step_2.0.txt
+Done.
+Loading data from file: coded_output/pos_error_0o4_new_test_data_step_2.0.txt
+Done.
+pos_error_0o4 accuracy: 0.8005
+Loading data from file: coded_output/pos_error_0o25_new_training_data_step_2.0.txt
+Done.
+Loading data from file: coded_output/pos_error_0o25_new_test_data_step_2.0.txt
+Done.
+pos_error_0o25 accuracy: 0.8905
+Loading data from file: coded_output/pos_perf_new_training_data_step_2.0.txt
+Done.
+Loading data from file: coded_output/pos_perf_new_test_data_step_2.0.txt
+Done.
+pos_perf accuracy: 0.981
+Accuracies:
+pos_error_0o1 0.9625
+pos_error_0o4 0.8005
+pos_error_0o25 0.8905
+pos_perf 0.981
+Performing 10-fold cross validation on models.
+Loading data from file: coded_output/pos_error_0o1_new_training_data_step_2.0.txt
+Done.
+Loading data from file: coded_output/pos_error_0o1_new_test_data_step_2.0.txt
+Done.
+Beginning cross-validation for dataset pos_error_0o1...
+pos_error_0o1: (0.99533333333333329, 0.00029265704869035219)
+Loading data from file: coded_output/pos_error_0o4_new_training_data_step_2.0.txt
+Done.
+Loading data from file: coded_output/pos_error_0o4_new_test_data_step_2.0.txt
+Done.
+Beginning cross-validation for dataset pos_error_0o4...
+pos_error_0o4: (0.99795833333333339, 0.00048927541538356495)
+Loading data from file: coded_output/pos_error_0o25_new_training_data_step_2.0.txt
+Done.
+Loading data from file: coded_output/pos_error_0o25_new_test_data_step_2.0.txt
+Done.
+Beginning cross-validation for dataset pos_error_0o25...
+pos_error_0o25: (0.99573611111111104, 0.00083576035462946409)
+Loading data from file: coded_output/pos_perf_new_training_data_step_2.0.txt
+Done.
+Loading data from file: coded_output/pos_perf_new_test_data_step_2.0.txt
+Done.
+Beginning cross-validation for dataset pos_perf...
+pos_perf: (0.99436111111111103, 0.00053142017971412824)
+
+
+--------- * ---------
+
+Accuracy ratings per experiment (mean of 10-fold cross validation):
+        
+pos_error_0o1: 0.9953333333333333 (std: 0.0002926570486903522)
+pos_error_0o4: 0.9979583333333334 (std: 0.000489275415383565)
+pos_error_0o25: 0.995736111111111 (std: 0.0008357603546294641)
+pos_perf: 0.994361111111111 (std: 0.0005314201797141282)
