@@ -156,4 +156,4 @@ def learn_and_predict():
 
 if __name__ == '__main__':
     learn_and_predict()
-    # cross_validation()
+    cross_validation()
