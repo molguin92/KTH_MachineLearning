@@ -84,6 +84,7 @@ def cross_validation(k=10):
         train_out = test_out = None
         gc.collect()
 
+        print('Beginning cross-validation for dataset {}...'.format(prefix))
         classifier = LabelPowerset(LinearSVC())
         scores = time_func(cross_val_score)(classifier,
                                             total_data_in,
@@ -153,10 +154,5 @@ def learn_and_predict():
 
 
 if __name__ == '__main__':
-    training_file = 'coded_output/' \
-                    '{}_new_training_data_step_2.0.txt'.format('pos_perf')
-    i, o = load_data(training_file)
-    print(len(np.unique(o.toarray(), axis=0)))
-
     # learn_and_predict()
-    # cross_validation()
+    cross_validation()
