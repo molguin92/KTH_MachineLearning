@@ -63,7 +63,7 @@ def load_data(file, output_process_func=process_output):
 
 @time_func
 def cross_validation(k=10):
-    print('Performing {}-fold validation on models.'.format(k))
+    print('Performing {}-fold cross validation on models.'.format(k))
     results = dict()
 
     for prefix in coded_output_file_prefixes:
@@ -122,7 +122,7 @@ def learn_and_predict():
         train_in, train_out = load_data(training_file)
         test_in, test_out = load_data(test_file)
 
-        classifier = LabelPowerset(LinearSVC(), require_dense=[True, False])
+        classifier = LabelPowerset(LinearSVC())
 
         time_func(classifier.fit)(train_in, train_out)
         train_in = train_out = None
@@ -133,10 +133,10 @@ def learn_and_predict():
         gc.collect()
 
         acc = accuracy_score(test_out, predictions)
+        print('{} accuracy: {}'.format(prefix, acc))
         test_out = None
         gc.collect()
 
-        # todo: fix this:
         with open('results/{}_predictions.txt'.format(prefix), 'w') as f:
             writer = csv.writer(f)
             _pred = predictions.toarray()
@@ -144,7 +144,7 @@ def learn_and_predict():
                 row = []
                 for i, element in enumerate(sample):
                     if element == 1:
-                        row.append(i)
+                        row.append(i % n_classes)
                 writer.writerow(row)
 
         accuracies[prefix] = acc
@@ -155,5 +155,5 @@ def learn_and_predict():
 
 
 if __name__ == '__main__':
-    # learn_and_predict()
-    cross_validation()
+    learn_and_predict()
+    # cross_validation()
