@@ -95,6 +95,7 @@ def cross_validation(k=10):
         gc.collect()
 
         results[prefix] = (scores.mean(), scores.std())
+        print('{}: {}'.format(prefix, results[prefix]))
 
     print('''
 
