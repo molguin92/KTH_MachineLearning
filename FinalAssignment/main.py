@@ -119,7 +119,7 @@ def learn_and_predict():
         train_in, train_out = load_data(training_file)
         test_in, test_out = load_data(test_file)
 
-        classifier = LabelPowerset(LinearSVC())
+        classifier = LabelPowerset(LinearSVC(), require_dense=[True, False])
 
         time_func(classifier.fit)(train_in, train_out)
         train_in = train_out = None
