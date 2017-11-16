@@ -62,6 +62,41 @@ def load_data(file, output_process_func=process_output):
 
 
 @time_func
+def shuffle_data(data_in, data_out):
+    assert data_in.shape[0] == data_out.shape[0]
+    shuffle_indices = np.random.permutation(data_in.shape[0])
+    return data_in[shuffle_indices], data_out[shuffle_indices]
+
+
+@time_func
+def k_fold_cross_validation(cf, data_in, data_out, k=10):
+    # shuffle data, then partition
+    assert k > 1
+
+    data_in, data_out = shuffle_data(data_in, data_out)
+    data_in = np.split(data_in, k)
+    data_out = np.split(data_out, k)
+
+    validation_in = data_in.pop(0)
+    validation_out = data_out.pop(0)
+
+    results = []
+
+    for d_in, d_out in zip(data_in, data_out):
+        gc.collect()
+
+        cf.fit(d_in, d_out)
+        predictions = cf.predict(validation_in)
+        errors = np.count_nonzero(np.subtract(validation_out, predictions))
+        accuracy = 1.0 - ((errors * 1.0) / predictions.size)
+
+        results.append(accuracy)
+
+    results = np.array(results)
+    return results.mean(), results.std()
+
+
+@time_func
 def cross_validation(k=10):
     print('Performing {}-fold cross validation on models.'.format(k))
     results = dict()
@@ -86,15 +121,21 @@ def cross_validation(k=10):
 
         print('Beginning cross-validation for dataset {}...'.format(prefix))
         classifier = LabelPowerset(LinearSVC())
-        scores = time_func(cross_val_score)(classifier,
-                                            total_data_in,
-                                            total_data_out,
-                                            cv=k)
+        scores_built_in = time_func(cross_val_score)(classifier,
+                                                     total_data_in,
+                                                     total_data_out,
+                                                     cv=k)
+
+        mean_k_fold, std_k_fold = k_fold_cross_validation(classifier,
+                                                          total_data_in,
+                                                          total_data_out,
+                                                          k=k)
 
         total_data_out = total_data_in = None
         gc.collect()
 
-        results[prefix] = (scores.mean(), scores.std())
+        results[prefix] = (scores_built_in.mean(), scores_built_in.std(),
+                           mean_k_fold, std_k_fold)
         print('{}: {}'.format(prefix, results[prefix]))
 
     print('''
@@ -105,7 +146,8 @@ Accuracy ratings per experiment (mean of {}-fold cross validation):
         '''.format(k))
 
     for prefix, stats in results.items():
-        print('{}: {} (std: {})'.format(prefix, stats[0], stats[1]))
+        print('{} -> built-in: {} (std: {}) | custom: {} (std: {})'.format(
+            prefix, stats[0], stats[1], stats[2], stats[3]))
 
 
 @time_func
@@ -155,5 +197,5 @@ def learn_and_predict():
 
 
 if __name__ == '__main__':
-    learn_and_predict()
     cross_validation()
+    learn_and_predict()
