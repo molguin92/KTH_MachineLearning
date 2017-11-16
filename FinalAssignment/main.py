@@ -242,5 +242,5 @@ def learn_and_predict():
 
 
 if __name__ == '__main__':
-    cross_validation()
+    # cross_validation()
     learn_and_predict()
