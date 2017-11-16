@@ -77,8 +77,8 @@ def k_fold_cross_validation(cf, data_in, data_out, k=10):
     data_in = np.split(data_in, k)
     data_out = np.split(data_out, k)
 
-    validation_in = data_in.pop(0)
-    validation_out = data_out.pop(0)
+    validation_in = dok_matrix(data_in.pop(0))
+    validation_out = dok_matrix(data_out.pop(0))
 
     results = []
 
@@ -86,7 +86,7 @@ def k_fold_cross_validation(cf, data_in, data_out, k=10):
 
         cf.fit(d_in, d_out)
         predictions = cf.predict(validation_in)
-        errors = np.count_nonzero(np.subtract(validation_out, predictions))
+        errors = (predictions - validation_out).nnz
         accuracy = 1.0 - ((errors * 1.0) / predictions.size)
 
         results.append(accuracy)
