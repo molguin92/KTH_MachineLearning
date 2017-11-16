@@ -9,6 +9,7 @@ from scipy.sparse import dok_matrix
 from sklearn.metrics import accuracy_score
 from sklearn.svm import LinearSVC
 from skmultilearn.problem_transform import LabelPowerset
+from multiprocessing import Pool
 
 n_classes = 12289
 n_labels = 9
@@ -196,51 +197,53 @@ Accuracy ratings per experiment (mean of {}-fold cross validation):
 
 
 @time_func
-def learn_and_predict():
+def train_test_svm(dataset_name):
+    training_file = 'coded_output/' \
+                    '{}_new_training_data_step_2.0.txt'.format(dataset_name)
+    test_file = 'coded_output/' \
+                '{}_new_test_data_step_2.0.txt'.format(dataset_name)
+
+    train_in, train_out = load_data(training_file)
+    test_in, test_out = load_data(test_file)
+
+    classifier = LabelPowerset(LinearSVC())
+
+    time_func(classifier.fit)(train_in, train_out)
+    train_in = train_out = None
+    gc.collect()
+
+    predictions = time_func(classifier.predict)(test_in)
+    test_in = None
+    gc.collect()
+
+    acc = accuracy_score(test_out, predictions)
+    test_out = None
+    gc.collect()
+
+    return acc, predictions
+
+
+@time_func
+def parallel_learn_and_predict():
     print('Building linear SVMs and predicting.')
 
-    accuracies = dict()
-    for prefix in coded_output_file_prefixes:
-        training_file = 'coded_output/' \
-                        '{}_new_training_data_step_2.0.txt'.format(prefix)
-        test_file = 'coded_output/' \
-                    '{}_new_test_data_step_2.0.txt'.format(prefix)
+    with Pool(processes=3) as pool:
+        results = pool.map(train_test_svm, coded_output_file_prefixes)
 
-        train_in, train_out = load_data(training_file)
-        test_in, test_out = load_data(test_file)
+        for prefix, (acc, predictions) in zip(coded_output_file_prefixes,
+                                              results):
+            with open('results/{}_predictions.txt'.format(prefix), 'w') as f:
+                writer = csv.writer(f)
+                _pred = predictions.toarray()
+                for sample in _pred:
+                    row = []
+                    for i, element in enumerate(sample):
+                        if element == 1:
+                            row.append(i % n_classes)
+                    writer.writerow(row)
 
-        classifier = LabelPowerset(LinearSVC())
-
-        time_func(classifier.fit)(train_in, train_out)
-        train_in = train_out = None
-        gc.collect()
-
-        predictions = time_func(classifier.predict)(test_in)
-        test_in = None
-        gc.collect()
-
-        acc = accuracy_score(test_out, predictions)
-        print('{} accuracy: {}'.format(prefix, acc))
-        test_out = None
-        gc.collect()
-
-        with open('results/{}_predictions.txt'.format(prefix), 'w') as f:
-            writer = csv.writer(f)
-            _pred = predictions.toarray()
-            for sample in _pred:
-                row = []
-                for i, element in enumerate(sample):
-                    if element == 1:
-                        row.append(i % n_classes)
-                writer.writerow(row)
-
-        accuracies[prefix] = acc
-
-    print('Accuracies:')
-    for prefix, acc in accuracies.items():
-        print(prefix, acc)
-
+            print('{}: {}'.format(prefix, acc))
 
 if __name__ == '__main__':
     # cross_validation()
-    learn_and_predict()
+    parallel_learn_and_predict()
