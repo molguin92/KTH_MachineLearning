@@ -41,7 +41,6 @@ def time_func(func):
     return wrapper
 
 
-@time_func
 def process_output(output):
     """
     Processes the given label set output matrix to the binary representation
@@ -59,7 +58,6 @@ def process_output(output):
     return processed_output.tocoo()
 
 
-@time_func
 def load_data(file, output_process_func=process_output):
     """
     Loads a dataset from a correctly formatted input file.
@@ -83,6 +81,17 @@ def load_data(file, output_process_func=process_output):
 
 
 @time_func
+def load_dataset(dataset_name):
+    training_file = 'coded_output/' \
+                    '{}_new_training_data_step_2.0.txt'.format(dataset_name)
+    test_file = 'coded_output/' \
+                '{}_new_test_data_step_2.0.txt'.format(dataset_name)
+
+    train_in, train_out = load_data(training_file)
+    test_in, test_out = load_data(test_file)
+    return train_in, train_out, test_in, test_out
+
+
 def shuffle_data(data_in, data_out):
     """
     Row-wise shuffles the input and output data of a dataset while
@@ -197,38 +206,26 @@ Accuracy ratings per experiment (mean of {}-fold cross validation):
 
 
 # @time_func
-def train_test_svm(dataset_name):
-    training_file = 'coded_output/' \
-                    '{}_new_training_data_step_2.0.txt'.format(dataset_name)
-    test_file = 'coded_output/' \
-                '{}_new_test_data_step_2.0.txt'.format(dataset_name)
-
-    train_in, train_out = load_data(training_file)
-    test_in, test_out = load_data(test_file)
+def train_test_svm(dataset):
+    train_in, train_out, test_in, test_out = dataset
+    dataset = None
+    gc.collect()
 
     classifier = LabelPowerset(LinearSVC())
-
     time_func(classifier.fit)(train_in, train_out)
-    train_in = train_out = None
-    gc.collect()
-
     predictions = time_func(classifier.predict)(test_in)
-    test_in = None
-    gc.collect()
-
     acc = accuracy_score(test_out, predictions)
-    test_out = None
-    gc.collect()
 
     return acc, predictions
 
 
 @time_func
-def parallel_learn_and_predict():
+def parallel_learn_and_predict(datasets):
+    # datasets: array of tuples (train_in, train_out, test_in, test_out)
     print('Building linear SVMs and predicting.')
 
-    with Pool(processes=3) as pool:
-        results = pool.map(train_test_svm, coded_output_file_prefixes)
+    with Pool(processes=4) as pool:
+        results = pool.map(train_test_svm, datasets)
 
         for prefix, (acc, predictions) in zip(coded_output_file_prefixes,
                                               results):
@@ -244,6 +241,8 @@ def parallel_learn_and_predict():
 
             print('{}: {}'.format(prefix, acc))
 
+
 if __name__ == '__main__':
     # cross_validation()
-    parallel_learn_and_predict()
+    datasets = map(load_dataset, coded_output_file_prefixes)
+    parallel_learn_and_predict(datasets)
