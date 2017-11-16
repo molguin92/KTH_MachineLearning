@@ -83,7 +83,6 @@ def k_fold_cross_validation(cf, data_in, data_out, k=10):
     results = []
 
     for d_in, d_out in zip(data_in, data_out):
-        gc.collect()
 
         cf.fit(d_in, d_out)
         predictions = cf.predict(validation_in)
@@ -121,16 +120,20 @@ def cross_validation(k=10):
 
         print('Beginning cross-validation for dataset {}...'.format(prefix))
         classifier = LabelPowerset(LinearSVC())
-        scores_built_in = time_func(cross_val_score)(classifier,
-                                                     total_data_in,
-                                                     total_data_out,
-                                                     cv=k)
 
+        print('Custom cross-validation...')
         mean_k_fold, std_k_fold = k_fold_cross_validation(classifier,
                                                           total_data_in,
                                                           total_data_out,
                                                           k=k)
 
+        print('Done.\nBuilt in cross-validation...')
+        scores_built_in = time_func(cross_val_score)(classifier,
+                                                     total_data_in,
+                                                     total_data_out,
+                                                     cv=k)
+
+        print('Done')
         total_data_out = total_data_in = None
         gc.collect()
 
