@@ -80,14 +80,16 @@ def k_fold_cross_validation(cf, data_in, data_out, k=10):
     results = []
 
     # each split is used exactly once for validation
-    for predict_i in range(k):
-        for i in range(k):
-            if i == predict_i:
+    for i in range(k):
+        # train on i, validate on all others
+        cf.fit(data_in[i], data_out[i])
+
+        for j in range(k):
+            if i == j:
                 pass
 
-            cf.fit(data_in[i], data_out[i])
-            predictions = cf.predict(data_in[predict_i])
-            errors = (predictions - dok_matrix(data_out[predict_i])).nnz
+            predictions = cf.predict(data_in[j])
+            errors = (predictions - dok_matrix(data_out[j])).nnz
             results.append(1.0 - ((errors * 1.0) / predictions.size))
 
     results = np.array(results)
