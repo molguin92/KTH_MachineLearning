@@ -196,7 +196,7 @@ Accuracy ratings per experiment (mean of {}-fold cross validation):
         #         prefix, stats[0], stats[1], stats[2], stats[3]))
 
 
-@time_func
+# @time_func
 def train_test_svm(dataset_name):
     training_file = 'coded_output/' \
                     '{}_new_training_data_step_2.0.txt'.format(dataset_name)
