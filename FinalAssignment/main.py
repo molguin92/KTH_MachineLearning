@@ -66,7 +66,7 @@ def decode_output(encoded_output):
     for row, col in zip(*n_zero):
         value = col % n_classes
         decoded_col = int(col - value) / n_classes
-        decoded_output[int(row), int(decoded_col)] = value
+        decoded_output[int(row), int(decoded_col)] = int(value)
 
     return decoded_output
 
