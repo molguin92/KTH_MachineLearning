@@ -134,10 +134,9 @@ def shuffle_data(data_in, data_out):
 
 
 @time_func
-def k_fold_cross_validation(cf, dataset, k=10):
+def k_fold_cross_validation(dataset, k=10):
     """
-    Performs k_fold cross validation on a dataset given a specific classifier.
-    :param cf: Classifier to use for the cross-validation
+    Performs k_fold cross validation on a dataset using LinearSVCs
     :param dataset: Dataset tuple in format (train_in, train_out, test_in,
     test_out)
     :param k: Optional k-fold parameter. Default is 10.
@@ -148,7 +147,6 @@ def k_fold_cross_validation(cf, dataset, k=10):
     assert k > 1
 
     # data has to be dense :(
-
     data_in = np.vstack((dataset[0], dataset[2]))
     data_out = np.vstack((dataset[1].toarray(), dataset[3].toarray()))
 
@@ -159,21 +157,23 @@ def k_fold_cross_validation(cf, dataset, k=10):
 
     # re-sparsify?
     data_out = list(map(coo_matrix, data_out))
-    results = None
 
-    # each split is used exactly once for validation
-    for i in range(k):
-        # train on i, validate on all others
-        cf.fit(data_in[i], data_out[i])
-        CF = list(itertools.repeat(cf, k - 1))
-        no_preds = list(itertools.repeat(False, k - 1))
+    # train a classifier for each of the k splits
+    results = []
+    with Pool(processes=4) as pool:
+        classifiers = pool.starmap(LabelPowerset(LinearSVC()).fit,
+                                   zip(data_in, data_out))
 
-        with Pool(processes=4) as pool:
-            results = pool.starmap(validate,
-                                   zip(CF,
-                                       data_in[: i] + data_in[i + 1:],
-                                       data_out[: i] + data_out[i + 1:],
-                                       no_preds))
+        # use each split once for validation on each of the classifiers
+        for i, cf in enumerate(classifiers):
+            CF = list(itertools.repeat(cf, k - 1))
+            no_preds = list(itertools.repeat(False, k - 1))
+
+            results += pool.starmap(validate,
+                                    zip(CF,
+                                        data_in[: i] + data_in[i + 1:],
+                                        data_out[: i] + data_out[i + 1:],
+                                        no_preds))
 
     results = np.array(results)
     return results.mean(), results.std()
@@ -183,11 +183,11 @@ def k_fold_cross_validation(cf, dataset, k=10):
 def cross_validate(datasets):
     print('Cross-validating model...')
     classifier = LabelPowerset(LinearSVC())
-    results = list(map(lambda dset: k_fold_cross_validation(classifier,
-                                                            dset), datasets))
+    results = list(map(lambda dset: k_fold_cross_validation(dset), datasets))
 
     for name, stats in zip(coded_output_file_prefixes, results):
-        print('Cross-validation {}: {} (std: {})'.format(name, stats[0],
+        print('Cross-validation {}: {} (std: {})'.format(name,
+                                                         stats[0],
                                                          stats[1]))
 
 
