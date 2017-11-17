@@ -194,8 +194,6 @@ def cross_validate(datasets):
 # @time_func
 def train_test_svm(dataset, return_predictions=True):
     train_in, train_out, test_in, test_out = dataset
-    dataset = None
-    gc.collect()
 
     classifier = LabelPowerset(LinearSVC())
     time_func(classifier.fit)(train_in, train_out)
@@ -236,6 +234,6 @@ def parallel_learn_and_predict(datasets):
 
 
 if __name__ == '__main__':
-    datasets = map(load_dataset, coded_output_file_prefixes)
+    datasets = list(map(load_dataset, coded_output_file_prefixes))
     cross_validate(datasets)
     parallel_learn_and_predict(datasets)
