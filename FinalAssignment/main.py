@@ -126,6 +126,7 @@ def k_fold_cross_validation(cf, dataset, k=10):
     :return: Tuple containing the average accuracy and standard deviation
     obtained through cross-validation.
     """
+
     assert k > 1
 
     # data has to be dense :(
@@ -140,20 +141,20 @@ def k_fold_cross_validation(cf, dataset, k=10):
 
     # re-sparsify?
     data_out = list(map(coo_matrix, data_out))
-    results = []
+    results = None
 
     # each split is used exactly once for validation
     for i in range(k):
         # train on i, validate on all others
         cf.fit(data_in[i], data_out[i])
 
-        for j in range(k):
-            if i == j:
-                pass
+        def validate(data):
+            predictions = cf.predict(data[0])
+            return accuracy_score(data[1], predictions)
 
-            predictions = cf.predict(data_in[j])
-            errors = (predictions - data_out[j]).nnz
-            results.append(1.0 - ((errors * 1.0) / predictions.size))
+        with Pool(processes=4) as pool:
+            results = pool.map(validate, zip(data_in[: i] + data_in[i + 1:],
+                                             data_out[: i] + data_out[i + 1:]))
 
     results = np.array(results)
     return results.mean(), results.std()
@@ -171,7 +172,7 @@ def cross_validate(datasets):
 
 
 # @time_func
-def train_test_svm(dataset):
+def train_test_svm(dataset, return_predictions=True):
     train_in, train_out, test_in, test_out = dataset
     dataset = None
     gc.collect()
@@ -181,7 +182,10 @@ def train_test_svm(dataset):
     predictions = time_func(classifier.predict)(test_in)
     acc = accuracy_score(test_out, predictions)
 
-    return acc, predictions
+    if return_predictions:
+        return acc, predictions
+    else:
+        return acc
 
 
 @time_func
@@ -209,6 +213,5 @@ def parallel_learn_and_predict(datasets):
 
 if __name__ == '__main__':
     datasets = map(load_dataset, coded_output_file_prefixes)
-
-    # cross_validate(datasets)
+    cross_validate(datasets)
     parallel_learn_and_predict(datasets)
