@@ -223,7 +223,14 @@ def parallel_learn_and_predict(datasets):
     # datasets: array of tuples (train_in, train_out, test_in, test_out)
     print('Building linear SVMs and predicting...')
     with Pool(processes=4) as pool:
-        accs, predictions = pool.map(train_test_svm, datasets)
+        results = pool.map(train_test_svm, datasets)
+
+        predictions = []
+        accs = []
+        for acc, pred in results:
+            accs.append(acc)
+            predictions.append(pred)
+
         decoded_outputs = pool.map(decode_output, predictions)
 
         for prefix, acc in zip(coded_output_file_prefixes, accs):
