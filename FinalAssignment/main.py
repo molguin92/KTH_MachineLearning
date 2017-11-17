@@ -69,7 +69,6 @@ def load_data(file, output_process_func=process_output):
     """
     print('Loading data from file:', file)
     data = np.loadtxt(file, dtype=np.uint16, delimiter=',', )
-    print('Done.')
 
     data_in = data[:, :-n_labels]
     data_out = data[:, -n_labels:]
@@ -182,6 +181,7 @@ def k_fold_cross_validation(cf, dataset, k=10):
 
 @time_func
 def cross_validate(datasets):
+    print('Cross-validating model...')
     classifier = LabelPowerset(LinearSVC())
     results = list(map(lambda dset: k_fold_cross_validation(classifier,
                                                             dset), datasets))
@@ -191,7 +191,6 @@ def cross_validate(datasets):
                                                          stats[1]))
 
 
-# @time_func
 def train_test_svm(dataset, return_predictions=True):
     train_in, train_out, test_in, test_out = dataset
 
@@ -200,9 +199,6 @@ def train_test_svm(dataset, return_predictions=True):
 
     acc, predictions = time_func(validate)(classifier, test_in,
                                            test_out, return_predictions)
-
-    # predictions = time_func(classifier.predict)(test_in)
-    # acc = accuracy_score(test_out, predictions)
 
     if return_predictions:
         return acc, predictions
@@ -220,6 +216,7 @@ def parallel_learn_and_predict(datasets):
 
         for prefix, (acc, predictions) in zip(coded_output_file_prefixes,
                                               results):
+            print('{}: {}'.format(prefix, acc))
             with open('results/{}_predictions.txt'.format(prefix), 'w') as f:
                 writer = csv.writer(f)
                 _pred = predictions.toarray()
@@ -230,10 +227,9 @@ def parallel_learn_and_predict(datasets):
                             row.append(i % n_classes)
                     writer.writerow(row)
 
-            print('{}: {}'.format(prefix, acc))
-
 
 if __name__ == '__main__':
     datasets = list(map(load_dataset, coded_output_file_prefixes))
     cross_validate(datasets)
+    print('\n---- * ----\n')
     parallel_learn_and_predict(datasets)
