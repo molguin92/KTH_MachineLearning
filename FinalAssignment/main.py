@@ -183,8 +183,8 @@ def k_fold_cross_validation(cf, dataset, k=10):
 @time_func
 def cross_validate(datasets):
     classifier = LabelPowerset(LinearSVC())
-    results = map(lambda dset: k_fold_cross_validation(classifier,
-                                                       dset), datasets)
+    results = list(map(lambda dset: k_fold_cross_validation(classifier,
+                                                            dset), datasets))
 
     for name, stats in zip(coded_output_file_prefixes, results):
         print('Cross-validation {}: {} (std: {})'.format(name, stats[0],
