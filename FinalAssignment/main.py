@@ -66,7 +66,7 @@ def decode_output(encoded_output):
     for row, col in zip(*n_zero):
         value = col % n_classes
         decoded_col = int(col - value) / n_classes
-        decoded_output[row, decoded_col] = value
+        decoded_output[int(row), int(decoded_col)] = value
 
     return decoded_output
 
@@ -245,6 +245,6 @@ def parallel_learn_and_predict(datasets):
 
 if __name__ == '__main__':
     datasets = list(map(load_dataset, coded_output_file_prefixes))
-    cross_validate(datasets)
-    print('\n---- * ----\n')
     parallel_learn_and_predict(datasets)
+    print('\n---- * ----\n')
+    cross_validate(datasets)
