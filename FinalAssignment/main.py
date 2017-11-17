@@ -100,7 +100,12 @@ def shuffle_data(data_in, data_out):
     :param data_out: Output data for the dataset.
     :return: Shuffled datasets.
     """
-    assert data_in.shape[0] == data_out.shape[0]
+    try:
+        assert data_in.shape[0] == data_out.shape[0]
+    except AssertionError:
+        print(data_in.shape[0], data_out.shape[0])
+        raise
+    
     shuffle_indices = np.random.permutation(data_in.shape[0])
     return data_in[shuffle_indices], data_out[shuffle_indices]
 
@@ -150,9 +155,9 @@ def cross_validate(datasets):
     results = map(lambda dset: k_fold_cross_validation(classifier,
                                                        dset), datasets)
 
-    print('Cross-validation results:')
     for name, stats in zip(coded_output_file_prefixes, results):
-        print('{}: {} (std: {})'.format(name, stats[0], stats[1]))
+        print('Cross-validation {}: {} (std: {})'.format(name, stats[0],
+                                                         stats[1]))
 
 
 # @time_func
@@ -194,6 +199,6 @@ def parallel_learn_and_predict(datasets):
 
 if __name__ == '__main__':
     datasets = map(load_dataset, coded_output_file_prefixes)
-    
+
     cross_validate(datasets)
     parallel_learn_and_predict(datasets)
