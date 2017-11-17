@@ -9,6 +9,7 @@ from scipy.sparse import dok_matrix, coo_matrix
 from sklearn.svm import LinearSVC
 from skmultilearn.problem_transform import LabelPowerset
 from multiprocessing import Pool
+import itertools
 
 n_classes = 12289
 n_labels = 9
@@ -97,6 +98,24 @@ def accuracy_score(x1, x2):
     return 1.0 - ((errors * 1.0) / x1.size)
 
 
+def validate(cf, data_in, data_out, return_predictions=True):
+    """
+    Applies a classifier cf to the data and returns the accuracy score,
+    and optionally the predictions.
+    :param cf: Classifier
+    :param data_in: Training input data.
+    :param data_out: Training output data.
+    :param get_predictions: Flag to indicate return predictions:
+    :return: Accuracy score (double).
+    """
+    predictions = cf.predict(data_in)
+    acc = accuracy_score(data_out, predictions)
+    if not return_predictions:
+        return acc
+    else:
+        return acc, predictions
+
+
 def shuffle_data(data_in, data_out):
     """
     Row-wise shuffles the input and output data of a dataset while
@@ -147,14 +166,15 @@ def k_fold_cross_validation(cf, dataset, k=10):
     for i in range(k):
         # train on i, validate on all others
         cf.fit(data_in[i], data_out[i])
-
-        def validate(data):
-            predictions = cf.predict(data[0])
-            return accuracy_score(data[1], predictions)
+        CF = list(itertools.repeat(cf, k - 1))
+        no_preds = list(itertools.repeat(False, k - 1))
 
         with Pool(processes=4) as pool:
-            results = pool.map(validate, zip(data_in[: i] + data_in[i + 1:],
-                                             data_out[: i] + data_out[i + 1:]))
+            results = pool.starmap(validate,
+                                   zip(CF,
+                                       data_in[: i] + data_in[i + 1:],
+                                       data_out[: i] + data_out[i + 1:],
+                                       no_preds))
 
     results = np.array(results)
     return results.mean(), results.std()
@@ -179,8 +199,12 @@ def train_test_svm(dataset, return_predictions=True):
 
     classifier = LabelPowerset(LinearSVC())
     time_func(classifier.fit)(train_in, train_out)
-    predictions = time_func(classifier.predict)(test_in)
-    acc = accuracy_score(test_out, predictions)
+
+    acc, predictions = time_func(validate)(classifier, test_in,
+                                           test_out, return_predictions)
+
+    # predictions = time_func(classifier.predict)(test_in)
+    # acc = accuracy_score(test_out, predictions)
 
     if return_predictions:
         return acc, predictions
