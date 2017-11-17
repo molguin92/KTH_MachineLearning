@@ -5,7 +5,7 @@ import time
 from sys import stderr
 
 import numpy as np
-from scipy.sparse import dok_matrix
+from scipy.sparse import dok_matrix, coo_matrix
 from sklearn.metrics import accuracy_score
 from sklearn.svm import LinearSVC
 from skmultilearn.problem_transform import LabelPowerset
@@ -133,6 +133,8 @@ def k_fold_cross_validation(cf, dataset, k=10):
     data_in = np.split(data_in, k)
     data_out = np.split(data_out, k)
 
+    # re-sparsify?
+    data_out = list(map(coo_matrix, data_out))
     results = []
 
     # each split is used exactly once for validation
