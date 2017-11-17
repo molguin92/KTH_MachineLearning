@@ -62,11 +62,12 @@ def decode_output(encoded_output):
     # encoded output: binary sparse matrix
     # get nonzero elements
     n_zero = encoded_output.nonzero()
-    decoded_output = np.zeros(shape=(encoded_output.shape[0], n_labels))
+    decoded_output = np.empty(shape=(encoded_output.shape[0], n_labels),
+                              dtype=np.uint16)
     for row, col in zip(*n_zero):
         value = col % n_classes
         decoded_col = int(col - value) / n_classes
-        decoded_output[int(row), int(decoded_col)] = int(value)
+        decoded_output[int(row), int(decoded_col)] = value
 
     return decoded_output
 
