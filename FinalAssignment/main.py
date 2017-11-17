@@ -105,7 +105,7 @@ def shuffle_data(data_in, data_out):
     except AssertionError:
         print(data_in.shape[0], data_out.shape[0])
         raise
-    
+
     shuffle_indices = np.random.permutation(data_in.shape[0])
     return data_in[shuffle_indices], data_out[shuffle_indices]
 
@@ -122,8 +122,11 @@ def k_fold_cross_validation(cf, dataset, k=10):
     obtained through cross-validation.
     """
     assert k > 1
+
+    # data has to be dense :(
+
     data_in = np.vstack((dataset[0], dataset[2]))
-    data_out = np.vstack((dataset[1], dataset[3]))
+    data_out = np.vstack((dataset[1].toarray(), dataset[3].toarray()))
 
     # shuffle data, then partition
     data_in, data_out = shuffle_data(data_in, data_out)
