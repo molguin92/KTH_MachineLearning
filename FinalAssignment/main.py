@@ -5,7 +5,7 @@ import time
 from sys import stderr
 
 import numpy as np
-from scipy.sparse import dok_matrix, coo_matrix
+from scipy.sparse import dok_matrix, csr_matrix
 from sklearn.svm import LinearSVC
 from skmultilearn.problem_transform import LabelPowerset
 from multiprocessing import Pool
@@ -41,7 +41,7 @@ def time_func(func):
     return wrapper
 
 
-def process_output(output):
+def encode_output(output):
     """
     Processes the given label set output matrix to the binary representation
     expected by scikit-multilearn
@@ -55,10 +55,23 @@ def process_output(output):
         for j, label in enumerate(row):
             processed_output[i, (j * n_classes) + label] = 1
 
-    return processed_output.tocoo()
+    return processed_output.tocsr()
 
 
-def load_data(file, output_process_func=process_output):
+def decode_output(encoded_output):
+    # encoded output: binary sparse matrix
+    # get nonzero elements
+    n_zero = encoded_output.nonzero()
+    decoded_output = np.zeros(shape=(encoded_output.shape[0], n_labels))
+    for row, col in zip(*n_zero):
+        value = col % n_classes
+        decoded_col = int(col - value) / n_classes
+        decoded_output[row, decoded_col] = value
+
+    return decoded_output
+
+
+def load_data(file, output_process_func=encode_output):
     """
     Loads a dataset from a correctly formatted input file.
     :param file: Path of file to read.
@@ -156,7 +169,7 @@ def k_fold_cross_validation(dataset, k=10):
     data_out = np.split(data_out, k)
 
     # re-sparsify?
-    data_out = list(map(coo_matrix, data_out))
+    data_out = list(map(csr_matrix, data_out))
 
     # train a classifier for each of the k splits
     results = []
@@ -182,7 +195,6 @@ def k_fold_cross_validation(dataset, k=10):
 @time_func
 def cross_validate(datasets):
     print('Cross-validating model...')
-    classifier = LabelPowerset(LinearSVC())
     results = list(map(lambda dset: k_fold_cross_validation(dset), datasets))
 
     for name, stats in zip(coded_output_file_prefixes, results):
@@ -209,23 +221,19 @@ def train_test_svm(dataset, return_predictions=True):
 @time_func
 def parallel_learn_and_predict(datasets):
     # datasets: array of tuples (train_in, train_out, test_in, test_out)
-    print('Building linear SVMs and predicting.')
-
+    print('Building linear SVMs and predicting...')
     with Pool(processes=4) as pool:
-        results = pool.map(train_test_svm, datasets)
+        accs, predictions = pool.map(train_test_svm, datasets)
+        decoded_outputs = pool.map(decode_output, predictions)
 
-        for prefix, (acc, predictions) in zip(coded_output_file_prefixes,
-                                              results):
+        for prefix, acc in zip(coded_output_file_prefixes, accs):
             print('{}: {}'.format(prefix, acc))
+
+        print('Writing predictions to files...')
+        for prefix, output in zip(coded_output_file_prefixes, decoded_outputs):
             with open('results/{}_predictions.txt'.format(prefix), 'w') as f:
                 writer = csv.writer(f)
-                _pred = predictions.toarray()
-                for sample in _pred:
-                    row = []
-                    for i, element in enumerate(sample):
-                        if element == 1:
-                            row.append(i % n_classes)
-                    writer.writerow(row)
+                writer.writerows(output)
 
 
 if __name__ == '__main__':
