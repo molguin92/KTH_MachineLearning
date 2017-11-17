@@ -6,7 +6,6 @@ from sys import stderr
 
 import numpy as np
 from scipy.sparse import dok_matrix, coo_matrix
-from sklearn.metrics import accuracy_score
 from sklearn.svm import LinearSVC
 from skmultilearn.problem_transform import LabelPowerset
 from multiprocessing import Pool
@@ -92,6 +91,12 @@ def load_dataset(dataset_name):
     return train_in, train_out, test_in, test_out
 
 
+def accuracy_score(x1, x2):
+    assert x1.shape == x2.shape
+    errors = (x1 - x2).nnz
+    return 1.0 - ((errors * 1.0) / x1.size)
+
+
 def shuffle_data(data_in, data_out):
     """
     Row-wise shuffles the input and output data of a dataset while
@@ -147,7 +152,7 @@ def k_fold_cross_validation(cf, dataset, k=10):
                 pass
 
             predictions = cf.predict(data_in[j])
-            errors = (predictions - dok_matrix(data_out[j])).nnz
+            errors = (predictions - data_out[j]).nnz
             results.append(1.0 - ((errors * 1.0) / predictions.size))
 
     results = np.array(results)
@@ -205,5 +210,5 @@ def parallel_learn_and_predict(datasets):
 if __name__ == '__main__':
     datasets = map(load_dataset, coded_output_file_prefixes)
 
-    cross_validate(datasets)
+    # cross_validate(datasets)
     parallel_learn_and_predict(datasets)
