@@ -8,8 +8,9 @@ import numpy as np
 from scipy.sparse import dok_matrix, csr_matrix
 from sklearn.svm import LinearSVC
 from skmultilearn.problem_transform import LabelPowerset
-from multiprocessing import Pool
+from multiprocessing import Pool, Process, Event
 import itertools
+from psutil import cpu_percent, virtual_memory
 
 n_classes = 12289
 n_labels = 9
@@ -17,6 +18,30 @@ n_labels = 9
 coded_output_file_prefixes = [
     'pos_error_0o1', 'pos_error_0o4',
     'pos_error_0o25', 'pos_perf']
+
+
+class ProfilingProcess(Process):
+    def __init__(self, ):
+        Process.__init__(self)
+        self.exit = Event()
+        self.cpu = list()
+        self.ram = list()
+        cpu_percent()
+
+    def run(self):
+        while not self.exit.is_set():
+            self.cpu.append(cpu_percent())
+            memory = virtual_memory()
+            self.ram.append(memory.total - memory.available)
+            time.sleep(1)
+
+        with open('results/profiling_data.txt', 'w') as f:
+            writer = csv.writer(f)
+            for cpu_sample, ram_sample in zip(self.cpu, self.ram):
+                writer.writerow([cpu_sample, ram_sample])
+
+    def terminate(self):
+        self.exit.set()
 
 
 def time_func(func):
@@ -245,7 +270,13 @@ def parallel_learn_and_predict(datasets):
 
 
 if __name__ == '__main__':
+    profiling_process = ProfilingProcess()
+    profiling_process.start()
+
     datasets = list(map(load_dataset, coded_output_file_prefixes))
     parallel_learn_and_predict(datasets)
     print('\n---- * ----\n')
     cross_validate(datasets)
+
+    profiling_process.terminate()
+    profiling_process.join()
