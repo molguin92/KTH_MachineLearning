@@ -23,6 +23,7 @@ coded_output_file_prefixes = [
 class ProfilingProcess(Process):
     def __init__(self, ):
         Process.__init__(self)
+        Process.name = 'LinearSVC_Profiling'
         self.exit = Event()
         self.cpu = list()
         self.ram = list()
