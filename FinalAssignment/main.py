@@ -10,7 +10,7 @@ from sklearn.svm import LinearSVC
 from skmultilearn.problem_transform import LabelPowerset
 from multiprocessing import Pool, Process, Event
 import itertools
-from psutil import cpu_percent, virtual_memory
+from psutil import cpu_percent, virtual_memory, cpu_count
 
 n_classes = 12289
 n_labels = 9
@@ -31,15 +31,26 @@ class ProfilingProcess(Process):
 
     def run(self):
         while not self.exit.is_set():
-            self.cpu.append(cpu_percent())
+            cpu = cpu_percent(percpu=True)
+            cpu.append(cpu_percent())
+            self.cpu.append(cpu)
+
             memory = virtual_memory()
             self.ram.append(memory.total - memory.available)
+
             time.sleep(1)
 
         with open('results/profiling_data.txt', 'w') as f:
-            writer = csv.writer(f)
+            header = ['cpu' + str(i) for i in range(cpu_count())]
+            header.append('cpu_total')
+            header.append('ram')
+
+            writer = csv.DictWriter(f, fieldnames=header)
             for cpu_sample, ram_sample in zip(self.cpu, self.ram):
-                writer.writerow([cpu_sample, ram_sample])
+                l_row = list(cpu_sample)
+                l_row.append(ram_sample)
+                dict = {header[i]: l_row[i] for i in range(len(header))}
+                writer.writerow(dict)
 
     def terminate(self):
         self.exit.set()
@@ -273,11 +284,15 @@ def parallel_learn_and_predict(datasets):
 if __name__ == '__main__':
     profiling_process = ProfilingProcess()
     profiling_process.start()
+    time.sleep(2)
 
     datasets = list(map(load_dataset, coded_output_file_prefixes))
     parallel_learn_and_predict(datasets)
     print('\n---- * ----\n')
     cross_validate(datasets)
+    
+    gc.collect()
 
+    time.sleep(2)
     profiling_process.terminate()
     profiling_process.join()
