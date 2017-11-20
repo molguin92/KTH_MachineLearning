@@ -46,6 +46,7 @@ class ProfilingProcess(Process):
             header.append('ram')
 
             writer = csv.DictWriter(f, fieldnames=header)
+            writer.writeheader()
             for cpu_sample, ram_sample in zip(self.cpu, self.ram):
                 l_row = list(cpu_sample)
                 l_row.append(ram_sample)
@@ -290,7 +291,7 @@ if __name__ == '__main__':
     parallel_learn_and_predict(datasets)
     print('\n---- * ----\n')
     cross_validate(datasets)
-    
+
     gc.collect()
 
     time.sleep(2)
