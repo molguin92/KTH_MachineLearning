@@ -1,0 +1,15 @@
+[0] Config.pm:354> INFO - This is Biber 2.7 (beta)
+[0] Config.pm:357> INFO - Logfile is 'example_report.blg'
+[25] biber:303> INFO - === mån nov 20, 2017, 21:25:07
+[35] Biber.pm:360> INFO - Reading 'example_report.bcf'
+[87] Biber.pm:836> INFO - Found 2 citekeys in bib section 0
+[96] Biber.pm:3671> INFO - Processing section 0
+[106] Biber.pm:3841> INFO - Looking for bibtex format file 'bibl.bib' for section 0
+[107] bibtex.pm:1424> INFO - Decoding LaTeX character macros into UTF-8
+[110] bibtex.pm:1281> INFO - Found BibTeX data source 'bibl.bib'
+[120] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[120] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[120] Biber.pm:3500> INFO - Sorting list 'nty/global/' of type 'entry' with scheme 'nty' and locale 'en-US'
+[120] Biber.pm:3506> INFO - No sort tailoring available for locale 'en-US'
+[122] bbl.pm:608> INFO - Writing 'example_report.bbl' with encoding 'UTF-8'
+[123] bbl.pm:712> INFO - Output to example_report.bbl

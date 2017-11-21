@@ -1,0 +1,67 @@
+\documentclass{kthreport}
+% default language is English, but you can use Swedish definitions like this:
+% \documentclass[swedish]{kthreport}
+
+% Remember that in order for the class to find the KTH logo, you need to
+% have it in your path, for example:
+% export TEXINPUTS=/path/to/logo/location//:$TEXINPUTS
+
+\usepackage{amsmath}
+\usepackage[backend=biber]{biblatex}
+\addbibresource{bibl.bib}
+
+\title{Final Assignment}
+\subtitle{DD3431 Machine Learning (PhD variant)}
+\author{Manuel Osvaldo Olguín}
+%\diarienr{99999-99}
+
+\begin{document}
+\maketitle
+
+This final report for the DD3431 Machine Learning course describes the application of Multiclass Linear Support Vector Machines to a multi-class, multi-output classification problem modeling the resource allocation strategies for basestations in a 5G environment.  
+
+\section{Introduction}
+
+\section{Description of the data}\label{sec:data}
+
+The data used for this study corresponds to samples of the resource allocation for a communication system composed of exactly three basestations and up to a maximum of 20 user devices. The area of interest studied within this communication scenario is modeled as a map; more specifically, it represents an area of 2400 m$^{2}$ divided into a grid of 2m$\times$2m cells. This grid is encoded as a matrix, with values between 0 and 2 indicating the occupancy status of each cell:
+\begin{itemize}
+	\item 0 for empty cells,
+	\item 1 for cells occupied by a user device,
+	\item 2 for cells occupied by a basestation.
+\end{itemize}
+
+The input data for the learning algorithm corresponds then to the vectorized form of this matrix, i.e. a vector of 600\footnote{$\frac{2400}{(2\times2)} = 600$} elements, each with a value $v_i \in \{0, 1, 2\}$.
+
+On the other hand, the output data for the learning algorithm corresponds to encoded variables representing the basestation--user device association and the resource allocation information for each sample. The exact details of this encoding and the information carried within escape the scope of this report, but it is of importance to note that:
+\begin{itemize}
+	\item there are 9 of these output variables per input sample (3 for each basestation in the model);
+	\item these output variables are mutually independent;
+	\item they have discrete integer values that range between 0 and 12 288;
+	\item these values can be repeated across variables;
+	\item finally, the order in which these values appear in the output is relevant (i.e. permutations of the same values correspond to different output classes!).
+\end{itemize} 
+
+In summary, the structure of an arbitrary sample looks like the following:
+
+\[\underbrace{0, 1, 0, 0, 2, 0, \ldots 0, 0, 0, 0, 0, 1,}_{\text{600 input features}}\underbrace{4567, 23, \ldots , 1337}_{\text{9 output labels}}\]
+
+\section{Choice of classifier}
+
+The dataset in question is part of ongoing research at the Department of Information Science and Engineering of the School of Electrical Engineering, and has already been modeled with great success using Random Forests and Neural Networks. The application of Support Vector Machines was then a natural step given the models' popularity in networking research literature; the specific application of the Linear Kernel for SVMs was a result of experimentation with the dataset, where initial experiments exposed the linearly separatable nature of the output variables.
+
+Support Vector Machines are binary classifiers though, and thus additional modifications are required to adapt these classifiers to multiclass problems as the one in question. Specifically, literature details the following techniques for adapting binary classifiers to multiclass applications \autocite{hsu2002comparison,tax2002multiclass}:
+
+\begin{itemize}
+	\item One-vs-One Method
+	\item One-vs-Rest Method
+	\item DAGSVM
+\end{itemize}
+
+\section{Preparation of the input data}
+
+In total, 72 000 samples in the format detailed in section \ref{sec:data} were provided for the training of the model, with two thirds (48 000) of these used for fitting and the rest (24 000) used for validation purposes. The complete dataset was also used for 10-fold cross-validation.
+
+\printbibliography
+
+\end{document}
