@@ -6,12 +6,21 @@
 % have it in your path, for example:
 % export TEXINPUTS=/path/to/logo/location//:$TEXINPUTS
 
-\usepackage{amsmath}
 \usepackage[libertine,cmintegrals,cmbraces,vvarbb]{newtxmath}
 \usepackage[backend=biber, sorting=none]{biblatex}
 \addbibresource{bibl.bib}
 \usepackage{listings}
 \usepackage{xcolor}
+
+\let\openbox\relax
+\usepackage{amsthm}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+\let\endopenbox\relax
+
+\usepackage{amsmath}
+\usepackage{csquotes}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -43,6 +52,8 @@
 	backgroundcolor=\color{lightgray},
 	escapeinside={/l*}{*l/}
 }
+
+\usepackage{url}
 
 %\DeclareFontFamily{\encodingdefault}{\ttdefault}{\hyphenchar\font=`\-}
 
@@ -131,7 +142,48 @@ The data provided for building the model consisted of 72 000 samples for each of
 0,0,0,...,0,2,0,...,3680,0,0,4112,8017,7408,10241,8272,11505
 \end{lstlisting}
 
-This data was read parsed \textbf{numpy}'s \textbf{loadfromtxt()} function, and then split into separate arrays for the input and output data (labels). The input data was passed ``as-is'' to the classifier, but the output data required additional processing  
+This data was parsed using \textbf{numpy}'s \textbf{loadfromtxt()} function, and then split into separate arrays for the input and output data (labels). The input data was passed ``as-is'' to the classifier, but the output data required additional processing which will be detailed below.
+
+
+As mentioned before, the output labels for each case were presented in the form of 9 consecutive integers, each ranging in value from 0 to 12 288. On the other hand, as per the API specifications\footnote{\url{http://scikit.ml/api/datasets.html#the-multi-label-data-representation}} of \textbf{scikit-multilearn}, when using the \textbf{LabelPowerSet} problem transformation, the output labels passed to (and obtained from) the classifier need to be encoded into a \emph{binary indicator matrix}. 
+
+\begin{definition}
+	A binary indicator matrix for a set of $\eta$ samples, each with $\kappa$ associated output labels out of a universe $K$ of distinct possible labels, is a matrix $A$ of dimensions $(\eta \times |K|)$, where
+	
+	\[ A_{i,j} = \begin{cases}
+	1 \text{ if label } j \in K \text{ is assigned to sample } i \\
+	0 \text{ otherwise }
+	\end{cases} \]
+	
+	Thus, $A$ is a sparse matrix where each row has \emph{at most} $\kappa$ elements of value $1$.
+\end{definition}
+
+Note that binary indicator matrices \emph{do not preserve information about label positions} in the output.
+Consider two sets of labels $\alpha$ and $\beta$, where $\beta$ is a permutation of $\alpha$ -- i.e. both have the same labels but in different order. 
+Given the previous definition of a the binary indicator matrix, both sets would then have the same representation in the matrix, since each element of a row only indicates if the label is present in the output. 
+They also don't handle repeated labels correctly -- multiples of a label are all assigned to the same element of the matrix.
+
+All of this poses a big problem for the model in question, where there can be repeated values in the output variables, and the order of which is relevant for the result. This meant that additional preprocessing of the data was necessary to encode the positional data of each output variable into the binary indicator matrix -- this would additionally solve the repetition problem, since variables with equal values but different positions would have different encodings.
+
+In the end, the following function was applied to each label in the output:
+
+\[ f(\nu, i) = (i * |K|) + \nu \]
+
+Where $\nu$ is the value of the output variable (label), $i$ corresponds to the $0$-indexed position of the variable in the output vector and $K$ is the universe of valid labels ($K = [0, 12288]$ in this particular case). 
+In practice, the result is that the first variable is assigned a value between $0$ and $|K| - 1$, the second variable a new value between $|K|$ and $2|K| - 1$, the third between $2|K|$ and $3|K| - 1$ and so on. 
+This ensures that when encoding the output variables into a binary indicator matrix, variables retains the information about the position they occupied in the original vector -- and since the new values are all distinct (since they depend on the individual position of each variable and no two variables share the same position) it also solves the problem of duplicate variables ``disappearing'' in the binary indicator matrix.
+
+Finally, to revert the previous transformation (for instance, when getting the results from the classifier), one only needs to apply the following:
+
+\[ \nu' = f(\nu, i) \]
+\[ \nu = \nu' \text{ mod } |K| \]
+\[ i = \frac{\nu' - \nu}{|K|} \]
+
+\subsection{Fitting and predicting}
+
+The fitting and predicting was performed in parallel for the four accuracy 
+
+\subsection{Validating}
 
 \printbibliography
 
