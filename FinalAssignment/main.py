@@ -97,8 +97,13 @@ def encode_output(output):
 
 
 def decode_output(encoded_output):
-    # encoded output: binary sparse matrix
-    # get nonzero elements
+    """
+    Decodes a binary indicator matrix into a 2-D vector of label vectors.
+    Each row in the output corresponds to the label vector for a specific
+    sample.
+    :param encoded_output: Binary indicator matrix.
+    :return: 2-D vector of label vectors.
+    """
     n_zero = encoded_output.nonzero()
     decoded_output = np.empty(shape=(encoded_output.shape[0], n_labels),
                               dtype=np.uint16)
