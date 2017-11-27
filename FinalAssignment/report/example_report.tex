@@ -124,13 +124,13 @@ The language chosen for this project was Python 3.6, given its extensive support
 
 \subsection{Choice of classifier}
 
-Based on the analysis detailed in section \ref{sec:cfchoice}, \textbf{sklearn.svm.LinearSVC} was selected as the base classifier to be used for this problem, as it corresponds to an implementation of a multi-class Support Vector Machine using the \emph{One-vs-Rest} method and a linear kernel. Tests were also conducted with \textbf{sklearn.svm.SVC}, which implements a multi-class SVM using the \emph{One-vs-One} method and a RBF-kernel, but its runtime proved to be cumbersomely large\footnote{Not a fair comparison, but for the unoptimized SVC case the runtime was over 3 hours for fitting and predicting, whereas the final optimized runtime for the LinearSVC is, on average, 110 seconds.}.
+Based on the analysis detailed in section \ref{sec:cfchoice}, \textbf{sklearn.svm.LinearSVC} was selected as the base classifier to be used for this problem, as it corresponds to an implementation of a multi-class Support Vector Machine using the \emph{One-vs-Rest} method and a linear kernel. Tests were also conducted with \textbf{sklearn.svm.SVC}, which implements a multi-class SVM using the \emph{One-vs-One} method and a RBF-kernel, but its runtime proved to be cumbersomely large\footnote{Not a fair comparison, but for the unoptimized SVC case the runtime was over 3 hours for fitting and predicting, whereas the final runtime for the optimized LinearSVC is, on average, 110 seconds.}.
 
 The classifier was then extended to work on multilabel outputs through the \textbf{skmultilearn.problem\_transform.LabelPowerSet} class, which implements the \emph{Label Powerset} problem transformation as detailed in \ref{sec:problemtransform}, thus treating every distinct label combination in the training data as a separate class to pass to the multiclass classifier.
 
 \subsection{Parsing and adapting the data}
 
-The data provided for building the model consisted of 72 000 samples for each of the four positional accuracy values detailed in the problem description (section \ref{sec:data}), divided into two files each: two thirds (48 000) of the samples for training, and one third (24 000) for validation. The format of the input files was one sample per line: 600 integers with values in $\{0, 1, 2\}$ representing the input features, followed by 9 integers with values in $[0, 12288]$ representing the output variables (everything separated by commas, see example below).
+The data provided for building the model consisted of 72 000 samples for each of the four positional accuracy values detailed in the problem description (section \ref{sec:data} - for simplicity's sake we'll refer to them as four different \emph{scenarios}), divided into two files each: two thirds (48 000) of the samples for training, and one third (24 000) for validation. The format of the input files was one sample per line: 600 integers with values in $\{0, 1, 2\}$ representing the input features, followed by 9 integers with values in $[0, 12288]$ representing the output variables (everything separated by commas, see example below).
 
 \begin{lstlisting}[captionpos=b,
 				basicstyle={\small\ttfamily},
@@ -165,7 +165,7 @@ They also don't handle repeated labels correctly -- multiples of a label are all
 
 All of this poses a big problem for the model in question, where there can be repeated values in the output variables, and the order of which is relevant for the result. This meant that additional preprocessing of the data was necessary to encode the positional data of each output variable into the binary indicator matrix -- this would additionally solve the repetition problem, since variables with equal values but different positions would have different encodings.
 
-In the end, the following function was applied to each label in the output:
+The following function was thus applied to each label in the output:
 
 \[ f(\nu, i) = (i * |K|) + \nu \]
 
@@ -173,15 +173,17 @@ Where $\nu$ is the value of the output variable (label), $i$ corresponds to the 
 In practice, the result is that the first variable is assigned a value between $0$ and $|K| - 1$, the second variable a new value between $|K|$ and $2|K| - 1$, the third between $2|K|$ and $3|K| - 1$ and so on. 
 This ensures that when encoding the output variables into a binary indicator matrix, variables retains the information about the position they occupied in the original vector -- and since the new values are all distinct (since they depend on the individual position of each variable and no two variables share the same position) it also solves the problem of duplicate variables ``disappearing'' in the binary indicator matrix.
 
-Finally, to revert the previous transformation (for instance, when getting the results from the classifier), one only needs to apply the following:
+Finally, to revert the previous transformation (for instance, when getting the results from the classifier), one only needs to apply the following to each encoded value $\nu'$:
 
 \[ \nu' = f(\nu, i) \]
 \[ \nu = \nu' \text{ mod } |K| \]
 \[ i = \frac{\nu' - \nu}{|K|} \]
 
-\subsection{Fitting and predicting}
+These operations transform the previously encoded value into the ``real'' output value $\nu$ and its position $i$ in the final output vector.
 
-The fitting and predicting was performed in parallel for the four accuracy 
+\subsection{Fitting and validating the model}
+
+Fitting and predicting was performed in parallel for the four scenarios using a Python process pool (\textbf{multiprocessing.Pool}). For each scenario, a classifier was constructed using the \textbf{LabelPowerSet} class with a \textbf{LinearSVC} with default parameters as the base classifier, which then was fitted on the training input data and the associated binary indicator matrix for the processed label output data using the \textbf{fit()} method of the classifier. Next, predictions were generated 
 
 \subsection{Validating}
 
