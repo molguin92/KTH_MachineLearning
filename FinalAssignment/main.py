@@ -146,8 +146,8 @@ def load_dataset(dataset_name):
 def accuracy_score(x1, x2):
     assert x1.shape == x2.shape
     assert x1.nnz == x2.nnz
-    errors = (x1 - x2).nnz
-    return 1.0 - ((errors * 1.0) / x1.nnz)
+    errors = (x1 - x2).nnz / 2.0
+    return 1.0 - (errors / x1.nnz)
 
 
 def validate(cf, data_in, data_out, return_predictions=True):
