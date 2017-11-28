@@ -193,15 +193,25 @@ def shuffle_data(data_in, data_out):
 
 
 def cross_validation_fold(index, splits_in, splits_out):
+    """
+    k-fold cross-validation "fold": performs validation using exactly
+    one of the splits as validation set and the rest of the dataset
+    as training data.
+    :param index: Index of the split to use as validation data
+    :param splits_in: List of splits of the original dataset inputs
+    :param splits_out: List of splits of the origina dataset outputs
+    :return: The accuracy score for a LinearSVC trained on all the
+    splits except <index> and then validated on split <index>
+    """
     validation_in = splits_in[index]
     validation_out = splits_out[index]
     cf = LabelPowerset(LinearSVC())
 
-    # train on all splits except split i
+    # train on all splits except split <index>
     cf.fit(np.vstack(splits_in[:index] + splits_in[index + 1:]),
            sparse_vstack(splits_out[:index] + splits_out[index + 1:]))
 
-    # validate on split i
+    # validate on split <index>
     return validate(cf, validation_in, validation_out, return_predictions=False)
 
 
@@ -218,9 +228,9 @@ def k_fold_cross_validation(dataset, k=10):
 
     assert k > 1
 
-    # data has to be dense :(
+    # label data has to be dense to be shuffled
+    # in the same order as the input data
     data_in = np.vstack((dataset[0], dataset[2]))
-    # data_out = sparse_vstack((dataset[1], dataset[3]))
     data_out = np.vstack((dataset[1].toarray(), dataset[3].toarray()))
 
     # shuffle data, then partition
@@ -237,21 +247,6 @@ def k_fold_cross_validation(dataset, k=10):
                                zip(range(k),
                                    itertools.repeat(data_in),
                                    itertools.repeat(data_out)))
-
-
-        # classifiers = pool.starmap(LabelPowerset(LinearSVC()).fit,
-        #                            zip(data_in, data_out))
-        #
-        # # use each split once for validation on each of the classifiers
-        # for i, cf in enumerate(classifiers):
-        #     CF = list(itertools.repeat(cf, k - 1))
-        #     no_preds = list(itertools.repeat(False, k - 1))
-        #
-        #     results += pool.starmap(validate,
-        #                             zip(CF,
-        #                                 data_in[: i] + data_in[i + 1:],
-        #                                 data_out[: i] + data_out[i + 1:],
-        #                                 no_preds))
 
     results = np.array(results)
     return results.mean(), results.std()
