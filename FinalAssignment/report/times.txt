@@ -1,0 +1,16 @@
+fit(...) total time: 93.48902082443237 seconds
+validate(...) total time: 2.465330123901367 seconds
+fit(...) total time: 98.33188962936401 seconds
+validate(...) total time: 2.2017133235931396 seconds
+fit(...) total time: 110.7845549583435 seconds
+validate(...) total time: 1.8542084693908691 seconds
+fit(...) total time: 128.91429471969604 seconds
+validate(...) total time: 1.65838623046875 seconds
+k_fold_cross_validation(...) total time: 485.62750124931335 seconds
+k_fold_cross_validation(...) total time: 426.65279722213745 seconds
+k_fold_cross_validation(...) total time: 447.3766453266144 seconds
+k_fold_cross_validation(...) total time: 600.0455551147461 seconds
+
+fit avg: 107.88
+val avg: 2.04
+cross avg: 489.93
