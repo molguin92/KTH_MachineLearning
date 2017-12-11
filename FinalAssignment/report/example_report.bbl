@@ -19,8 +19,8 @@
 
 \refsection{0}
   \sortlist[entry]{none/global/}
-    \entry{tsoumakas2009mining}{incollection}{}
-      \name{author}{3}{}{%
+    \entry{tsoumakas2006multi}{article}{}
+      \name{author}{2}{}{%
         {{hash=4f0d141cf0fe25aef8af5a28df702ef7}{%
            family={Tsoumakas},
            familyi={T\bibinitperiod},
@@ -31,28 +31,20 @@
            familyi={K\bibinitperiod},
            given={Ioannis},
            giveni={I\bibinitperiod}}}%
-        {{hash=a5f197c3ac3debe11a3bc412d8b5923b}{%
-           family={Vlahavas},
-           familyi={V\bibinitperiod},
-           given={Ioannis},
-           giveni={I\bibinitperiod}}}%
       }
-      \list{publisher}{1}{%
-        {Springer}%
-      }
-      \strng{namehash}{84f472c761bc4ec9ebf880c21b2662dd}
-      \strng{fullhash}{84f472c761bc4ec9ebf880c21b2662dd}
-      \strng{authornamehash}{84f472c761bc4ec9ebf880c21b2662dd}
-      \strng{authorfullhash}{84f472c761bc4ec9ebf880c21b2662dd}
+      \strng{namehash}{3eae60f117932774a2c5c843ad11eabb}
+      \strng{fullhash}{3eae60f117932774a2c5c843ad11eabb}
+      \strng{authornamehash}{3eae60f117932774a2c5c843ad11eabb}
+      \strng{authorfullhash}{3eae60f117932774a2c5c843ad11eabb}
       \field{sortinit}{1}
       \field{sortinithash}{27a2bc5dfb9ed0a0422134d636544b5d}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{booktitle}{Data mining and knowledge discovery handbook}
-      \field{title}{Mining multi-label data}
-      \field{year}{2009}
-      \field{pages}{667\bibrangedash 685}
-      \range{pages}{19}
+      \field{journaltitle}{International Journal of Data Warehousing and Mining}
+      \field{number}{3}
+      \field{title}{Multi-label classification: An overview}
+      \field{volume}{3}
+      \field{year}{2006}
     \endentry
     \entry{hsu2002comparison}{article}{}
       \name{author}{2}{}{%

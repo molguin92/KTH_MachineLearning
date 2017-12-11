@@ -11,6 +11,7 @@
 \addbibresource{bibl.bib}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage[group-digits=true]{siunitx}
 
 \let\openbox\relax
 \usepackage{amsthm}
@@ -21,6 +22,7 @@
 
 \usepackage{amsmath}
 \usepackage{csquotes}
+\usepackage{enumitem}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -55,6 +57,8 @@
 
 \usepackage{url}
 
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
 %\DeclareFontFamily{\encodingdefault}{\ttdefault}{\hyphenchar\font=`\-}
 
 \title{Final Assignment}
@@ -71,52 +75,80 @@ This final report for the DD3431 Machine Learning course describes the applicati
 
 \subsection{Description of the data}\label{sec:data}
 
-The data used for this study corresponds to samples of the resource allocation for a communication system composed of exactly three basestations and up to a maximum of 20 user devices. The area of interest studied within this communication scenario is modeled as a map; more specifically, it represents an area of 2400 m$^{2}$ divided into a grid of 2m$\times$2m cells. This grid is encoded as a matrix, with values between 0 and 2 indicating the occupancy status of each cell:
+The data used for this study corresponds to samples of the resource allocation strategy for a communication system composed of exactly three basestations and up to a maximum of \num{20} user devices. The area of interest studied within this communication scenario is modeled as a map; more specifically, it represents an area of \SI{2400}{\metre\squared} divided into a grid of \SI{2}{\metre}$\times$\SI{2}{\metre} cells. This grid is encoded as a matrix, with values between \num{0} and \num{2} indicating the occupancy status of each cell:
 \begin{itemize}
-	\item 0 for empty cells,
-	\item 1 for cells occupied by a user device,
-	\item 2 for cells occupied by a basestation.
+	\item \num{0} for empty cells,
+	\item \num{1} for cells occupied by a user device,
+	\item \num{2} for cells occupied by a basestation.
 \end{itemize}
 
-The occupancy data for each user could be either perfect or have an inaccuracy defined by a normal distribution with three possible standard deviations: 0.1, 0.25 or 0.4. Thus, the model had to be trained a total of four times, one for each variation of the positioning inaccuracy (we'll call them ``scenarios''). 
-
-The input data for the learning algorithm corresponds then to the vectorized form of this matrix, i.e. a vector of 600\footnote{$\frac{2400}{(2\times2)} = 600$} elements, each with a value $v_i \in \{0, 1, 2\}$.
+The occupancy data for each user can either be perfect or have an inaccuracy defined by a normal distribution with three possible standard deviations: \num{0.1}, \num{0.25} or \num{0.4}. Thus, the model had to be trained a total of four times, one for each variation of the positioning inaccuracy -- we will call them ``scenarios''. The input data for each scenario corresponds then to the vectorized form of the corresponding matrix, i.e. a vector of \num{600}\footnote{$\frac{2400}{(2\times2)} = 600$} elements, each with a value $v_i \in \{0, 1, 2\}$.
 
 On the other hand, the output data for the learning algorithm corresponds to encoded variables representing the basestation--user device association and the resource allocation information for each sample. The exact details of this encoding and the information carried within escape the scope of this report, but it is of importance to note that:
-\begin{itemize}
-	\item there are 9 of these output variables per input sample (3 for each basestation in the model);
+\begin{enumerate}
+	\item there are \num{9} of these output variables per input sample (\num{3} for each basestation in the model);
 	\item these output variables are mutually independent;
-	\item they have discrete integer values that range between 0 and 12 288;
-	\item these values can be repeated across variables;
-	\item finally, the order in which these values appear in the output is relevant (i.e. permutations of the same values correspond to different output classes!).
-\end{itemize} 
+	\item they have discrete integer values that range between \num{0} and \num{12288};
+	\item the order in which these values appear in the output is relevant (i.e. permutations of the same values correspond to different output classes!);\label{item:order}
+    \item finally, these values can also be repeated across variables.\label{item:repeat}
+\end{enumerate} 
+
+Items \ref{item:order} and \ref{item:repeat} make the problem different than a ``regular'' multi-label classification problem, in which only the distinct \emph{sets} of labels matter \autocite{tsoumakas2006multi}. \ref{item:repeat} is in practice a consequence of \ref{item:order} -- the significance of the positions of the labels in the output means that repeated values don't have the same meaning since their positions in the output vector are different.
+Additional preprocessing was thus necessary to adapt the output to traditional multi-label classification methods; this is discussed in section \ref{sec:cfchoice}.
 
 In summary, the structure of an arbitrary sample looks like the following:
 
-\[\underbrace{0, 1, 0, 0, 2, 0, \ldots 0, 0, 0, 0, 0, 1,}_{\text{600 input features}}\underbrace{4567, 23, \ldots , 1337}_{\text{9 output labels}}\]
+\begin{equation}
+\underbrace{0, 1, 0, 0, 2, 0, \ldots 0, 0, 0, 0, 0, 1,}_{\text{600 input features}}\underbrace{4567, 23, \ldots , 1337}_{\text{9 output labels}}
+\end{equation}
 
-In total, 72 000 samples in this format for each scenario were provided for the training of the model, with two thirds (48 000) of these used for fitting and the rest (24 000) used for validation purposes. The complete dataset was also used for 10-fold cross-validation, again for each scenario.
+In total, \num{72000} samples in this format for each scenario were provided for the training of the model, with two thirds (\num{48000}) of these used for fitting and the rest (\num{24000}) used for validation purposes. The complete dataset was also used for \num{10}-fold cross-validation, again for each scenario.
 
 \subsection{Adapting the data} \label{sec:problemtransform}
 
-As described in the previous section, the data represents a multi-class, multi-label problem with a high dimensionality both in terms of input features and classes, with the additional restriction that the order of the output labels matters. \autocite{tsoumakas2009mining}
+% As described in the previous section, the data represents a multi-class, multi-label problem with a high dimensionality both in terms of input features and classes, with the additional restriction that the order of the output labels matters. %\autocite{tsoumakas2009mining}.
 
 \subsection{Choice and adaptation of classifier}\label{sec:cfchoice}
 
-The dataset in question is part of ongoing research at the Department of Information Science and Engineering of the School of Electrical Engineering, and has already been modeled with great success using Random Forests and Neural Networks. The application of Support Vector Machines was then a natural step given the models' popularity in networking research literature; the specific application of the Linear Kernel for SVMs was a result of experimentation with the dataset, where initial experiments exposed the linearly separatable nature of the output variables.
+The dataset in question is part of ongoing research at the Department of Information Science and Engineering of the School of Electrical Engineering, and has already been modeled with great success using Random Forests and Neural Networks. The application of Support Vector Machines was then a natural step given this models' popularity in networking research literature; the specific application of the Linear Kernel for SVMs was a result of exploratory analysis with the dataset in the early stages of development, where initial experiments exposed the linearly separatable nature of the output variables.
 
 Support Vector Machines are binary classifiers though, and thus additional modifications are required to adapt these classifiers to multiclass problems as the one in question. Specifically, the following techniques for adapting binary classifiers to multiclass applications were identified from literature \autocite{hsu2002comparison,tax2002multiclass}:
 
-\begin{itemize}
-	\item One-vs-One Method: For $n$ classes, this method constructs $n(n-1)/2$ classifiers, each comparing a pair of classes from the training set. For prediction, all $n(n-1)/2$ classifiers are applied to an unseen sample, whose final class corresponds to the class with the most ``votes'' after processing. In case of a tie, it selects the class with the highest total confidence, obtained by aggregating the confidence scores of each binary classifier.
-	\item One-vs-Rest Method: Constructs $n$ classifiers, each comparing one class in the training set with the rest (i.e. each classifier determines if a sample belongs to a specific class or not). At prediction time, these $n$ classifiers are applied to the unseen sample and it is once again classified according to the majority vote.
-\end{itemize}
+\begin{description}
+	\item[One-vs-One Method:] For a universe $K$ of classes, with $\kappa = |K|$, this method constructs a maximum of $(\kappa(\kappa-1)/2)$ classifiers\footnote{This number could be smaller, as only the classes actually present in the training ouput are used.}, each comparing a pair of classes from the training set. For prediction, all of these classifiers are applied to an unseen sample, whose final class corresponds to the class with the most ``votes'' after processing. In case of a tie, it selects the class with the highest total confidence, obtained by aggregating the confidence scores of each binary classifier.
+	\item[One-vs-Rest Method:] Constructs a maximum of $\kappa$ classifiers, each comparing one class in the training set with the rest (i.e. each classifier determines if a sample belongs to a specific class or not). At prediction time, these classifiers are applied to the unseen sample and it is once again classified according to the majority vote.
+\end{description}
 
-Other multiclass adaptations of binary classifiers, like DAGSVM \autocite{chen2009dagsvm} and DDAG \autocite{platt2000ddag} were considered as well, but were ultimately considered overly complex for the problem at hand and dismissed.
+Other multiclass adaptations of binary classifiers, like DAGSVM \autocite{chen2009dagsvm} and DDAG \autocite{platt2000ddag} were considered as well, but were ultimately judged to be overly complex for the problem at hand.
 
 Note though that all of these modifications only transform a binary-class single-label classifier into a multi-classs single-label classifier, \emph{i.e.} they don't adapt the classifier to output more than one output variable (label) per prediction.
-Thus, another modification to either the problem or the classifier itself would be needed.
+Thus, another modification to the problem was necessary, as changing the classifier was discarded from the beginning.
 
+Two problem transformation strategies were evaluated: the \emph{Binary Relevance} and the \emph{Label Powerset} transformations \autocite{tsoumakas2006multi}:
+
+\begin{description}
+    \item[Binary Relevance:] This problem transformation learns $\kappa = |K|$ binary classifiers -- where $K$ again is the universe of classes, \emph{i.e.} one binary classifier for each class. Then, for an unseen sample $i$, it applies all $\kappa$ classifiers to it and assigns to it the union of all labels returned.
+    \item[Label Powerset:] This transformation is based on treating each distinct set of labels in the training output as a separate \emph{meta-label}. It thus trains \emph{one} multi-class classifier on $\eta$ input samples with $|\Lambda|$ possible output meta-labels, where $\Lambda$ is the collection of unique label combinations present in the original training output. 
+    Since it basically converts the problem into a single multi-class classification scenario, this strategy only works well if the number of samples is much larger than $|\Lambda|$.
+\end{description}
+
+The final decision about which multi-class classifier and problem transformation to use was mostly based on time efficiency. The large dimensions of the problem meant that less time-efficient classification methods could take extremely long times to fit and validate, without proportional gains in accuracy. Thus, the in the end the following methods were selected for the assignment:
+
+\begin{description}
+    \item[Multi-class classifier:] The \emph{One-vs-Rest} method was selected to adapt Support Vector Machines to the multi-class problem at hand, specifically because it only needs to train $\kappa$ classifiers instead of $\kappa(\kappa-1)/2$ (this number could be very big).
+    \item[Problem transformation:] It quickly became evident in the early exploratory stages of this assignment that the binary relevance method would be very unpractical. Given the large universe of labels of the problem ($ K = [0, \num{12288}] \Rightarrow |K| = \num{12289}$) and the large number of samples available, this method would take large amounts of time to both fit and validate.
+    
+    On the other hand, exploratory analysis of the input data revealed there were only about \num{800} distinct output label permutations for the \num{48000} training samples for each scenario, which meant that the Label Powerset method was applicable to this problem. 
+\end{description}
+
+This combination of methods meant that only \emph{one} multi-class Support Vector Machine, comprised of about \num{800} binary SVMs (one for each \emph{meta-label}), needed to be trained for each scenario. In contrast, the number of of classifiers that to be trained for each of the other combinations is:
+
+\begin{itemize}
+    \item For the binary relevance transformation directly with binary SVM's (since this method works directly with binary classifiers), \num{12289} classifiers need to be trained for each scenario.
+    \item For \emph{One-vs-One} multi-class SVM's using the Label Powerset transformation, approximately $800(800-1)/2 = \num{319600}$ classifiers need to be trained. 
+\end{itemize}
+
+Finally, traditional multi-label classification methods don't take into consideration the positions or the repetition of output labels -- only the distinct \emph{sets} of output labels are considered. Thus the problem had to be transformed in such a way that the positional information of each label in the output was encoded into the \emph{meta-label} used by the Label Powerset transformation.
 
 
 \section{Implementation}
@@ -127,20 +159,21 @@ The language chosen for this project was Python 3.6, given its extensive support
 
 \subsection{Choice of classifier}
 
-Based on the analysis detailed in section \ref{sec:cfchoice}, \textbf{sklearn.svm.LinearSVC} was selected as the base classifier to be used for this problem, as it corresponds to an implementation of a multi-class Support Vector Machine using the \emph{One-vs-Rest} method and a linear kernel. Tests were also conducted with \textbf{sklearn.svm.SVC}, which implements a multi-class SVM using the \emph{One-vs-One} method and a RBF-kernel, but its runtime proved to be cumbersomely large\footnote{Not a fair comparison, but for the unoptimized SVC case the runtime was over 3 hours for fitting and predicting, whereas the final runtime for the optimized LinearSVC is, on average, 110 seconds.}.
+Based on the analysis detailed in section \ref{sec:cfchoice}, \textbf{sklearn.svm.LinearSVC} was selected as the base classifier to be used for this problem, as it corresponds to an implementation of a multi-class Support Vector Machine using the \emph{One-vs-Rest} method and a linear kernel. Tests were also conducted with \textbf{sklearn.svm.SVC}, which implements a multi-class SVM using the \emph{One-vs-One} method and a RBF-kernel, but its runtime proved to be cumbersomely large\footnote{Not a fair comparison, but for the unoptimized SVC case the runtime was over \num{3} hours for fitting and predicting, whereas the final runtime for the optimized and parallelized LinearSVC is, on average, \num{110} seconds.}.
 
 The classifier was then extended to work on multilabel outputs through the \textbf{skmultilearn.problem\_transform.LabelPowerSet} class, which implements the \emph{Label Powerset} problem transformation as detailed in \ref{sec:problemtransform}. 
-Thus, the classifier treats every distinct label combination in the training data as a separate class when fitting and predicting.
+Thus, the classifier treats every distinct label combination and/or permutation in the training data as a separate class when fitting and predicting.
 
-\subsection{Parsing and adapting the data}
+\subsection{Parsing and adapting the data}\label{sec:parsing}
 
-The data provided for building the model consisted of 72 000 samples for each of the four positional accuracy values detailed in the problem description (section \ref{sec:data} - for simplicity's sake we'll refer to them as four different \emph{scenarios}), divided into two files each: two thirds (48 000) of the samples for training, and one third (24 000) for validation. The format of the input files was one sample per line: 600 integers with values in $\{0, 1, 2\}$ representing the input features, followed by 9 integers with values in $[0, 12288]$ representing the output variables (everything separated by commas, see example below).
+The data provided for building the model consisted of \num{72000} samples for each of the four positional accuracy values detailed in the problem description (section \ref{sec:data} - for simplicity's sake we'll refer to them as four different \emph{scenarios}), divided into two files each: \num{48000} of the samples for training, and \num{24 000} for validation. The format of the input files was one sample per line: \num{600} integers with values in $\{0, 1, 2\}$ representing the input features, followed by \num{9} integers with values in $[0, 12288]$ representing the output variables (everything separated by commas, see example in listing \ref{lst:example1}).
 
 \begin{lstlisting}[captionpos=b,
 				basicstyle={\small\ttfamily},
 				numbers=left, 
 				numberstyle=\tiny\color{gray},
-				caption={Abbreviated example of input samples.}]
+				caption={Abbreviated example of input samples.},
+                label={lst:example1}]
 0,0,0,...,0,2,0,...,3968,3841,528,8080,4209,6273,9201,9073,8592
 0,0,0,...,0,2,0,...,80,2545,2417,6145,8176,4112,8443,11761,8736
 0,0,0,...,0,2,0,...,3680,0,0,4112,8017,7408,10241,8272,11505
@@ -149,15 +182,17 @@ The data provided for building the model consisted of 72 000 samples for each of
 This data was parsed using \textbf{numpy}'s \textbf{loadfromtxt()} function, and then split into separate arrays for the input and output data (labels). The input data was passed ``as-is'' to the classifier, but the output data required additional processing which will be detailed below.
 
 
-As mentioned before, the output labels for each case were presented in the form of 9 consecutive integers, each ranging in value from 0 to 12 288. On the other hand, as per the API specifications\footnote{\url{http://scikit.ml/api/datasets.html#the-multi-label-data-representation}} of \textbf{scikit-multilearn}, when using the \textbf{LabelPowerSet} problem transformation, the output labels passed to (and obtained from) the classifier need to be encoded into a \emph{binary indicator matrix}. 
+As mentioned before, the output labels for each case were presented in the form of \num{9} consecutive integers, each ranging in value from \num{0} to \num{12288}. On the other hand, as per the API specifications\footnote{\url{http://scikit.ml/api/datasets.html#the-multi-label-data-representation}} of \textbf{scikit-multilearn}, when using the \textbf{LabelPowerSet} problem transformation, the output labels passed to (and obtained from) the classifier need to be encoded into a \emph{binary indicator matrix}. 
 
 \begin{definition}
 	A binary indicator matrix for a set of $\eta$ samples, each with $\kappa$ associated output labels out of a universe $K$ of distinct possible labels, is a matrix $A$ of dimensions $(\eta \times |K|)$, where
 	
-	\[ A_{i,j} = \begin{cases}
-	1 \text{ if label } j \in K \text{ is assigned to sample } i \\
-	0 \text{ otherwise }
-	\end{cases} \]
+    \begin{equation}
+    	A_{i,j} = \begin{cases}
+    	1 \text{ if label } j \in K \text{ is assigned to sample } i \\
+    	0 \text{ otherwise }
+    	\end{cases}
+    \end{equation}
 	
 	Thus, $A$ is a sparse matrix where each row has \emph{at most} $\kappa$ elements of value $1$.
 \end{definition}
@@ -171,10 +206,12 @@ All of this poses a big problem for the model in question, where there can be re
 
 The following function was thus applied to each label in the output:
 
-\[ f_{\text{enc}}(\nu, i) = (i * |K|) + \nu \]
+\begin{equation}
+    f_{\text{enc}}(\nu, i) = (i * |K|) + \nu
+\end{equation}
 
 Where $\nu$ is the value of the output variable (label), $i$ corresponds to the $0$-indexed position of the variable in the output vector and $K$ is the universe of valid labels ($K = [0, 12288]$ in this particular case). 
-In practice, the result is that the first variable is assigned a value between $0$ and $|K| - 1$, the second variable a new value between $|K|$ and $2|K| - 1$, the third between $2|K|$ and $3|K| - 1$ and so on. 
+In practice, the result is that the first variable of each sample is assigned a value between $0$ and $|K| - 1$, the second variable a new value between $|K|$ and $2|K| - 1$, the third between $2|K|$ and $3|K| - 1$ and so on. 
 This ensures that when encoding the output variables into a binary indicator matrix, variables retains the information about the position they occupied in the original vector -- and since the new values are all distinct (since they depend on the individual position of each variable and no two variables share the same position) it also solves the problem of duplicate variables ``disappearing'' in the binary indicator matrix.
 
 \begin{figure*}[thb]
@@ -200,9 +237,12 @@ def encode_output(output):
 
 Finally, to revert the previous transformation (for instance, when getting the results from the classifier), one only needs to apply the following to each encoded value $\nu'$:
 
-\[ \nu' = f_{\text{enc}}(\nu, i) \]
-\[ \nu = \nu' \text{ mod } |K| \]
-\[ i = \frac{\nu' - \nu}{|K|} \]
+\begin{align}
+    \nu' &= f_{\text{enc}}(\nu, i)\\
+    \nu &= \nu' \text{ mod } |K|\\
+    i &= \frac{\nu' - \nu}{|K|}
+\end{align}
+
 
 These operations transform the previously encoded value into the ``real'' output value $\nu$ and its position $i$ in the final output vector.
 
@@ -231,14 +271,16 @@ def decode_output(encoded_output):
 
 \subsection{Fitting and validating the model}
 
-Fitting, predicting on the test datasets and validating the results was performed in parallel for the four scenarios using a Python process pool (\textbf{multiprocessing.Pool}). 
+Fitting and predicting on the test datasets and validating the results were performed in parallel for the four scenarios using a Python process pool (\textbf{multiprocessing.Pool}). 
 
-For each scenario, a classifier was constructed using the \textbf{LabelPowerSet} class with a \textbf{LinearSVC} with default parameters as the base classifier, which then was fitted on the training input data and the associated binary indicator matrix for the processed label output data using the \textbf{fit()} method of the classifier.
+For each scenario, a classifier was constructed using the \textbf{LabelPowerSet} class with a \textbf{LinearSVC} with default parameters as the base classifier, which was then fitted on the training input data and the associated binary indicator matrix for the processed label output data using the \textbf{fit()} method of the classifier.
 Next, the model was validated on the training data with a custom validation function which takes advantage of the matrix representation of the results and of the fact that the position of each label matters in the final result. Let $V$ be the binary indicator matrix for the labels for the test fraction of the dataset (i.e. the expected output), and $V'$ the output generated by the classifier for the test input data, then the validation function $f_{v}$ can be expressed as:
 
-\[ f_{v} = 1 - \frac{\text{nonzero}(V - V')}{2 \times \text{nonzero}(V)} \]
+\begin{equation}
+    f_{v} = 1 - \frac{\text{nonzero}(V - V')}{2 \times \text{nonzero}(V)}
+\end{equation}
 
-In words, this function first calculates the total amount of non-zero elements in the element-by-element difference between both matrices; since both matrices have exactly the same amount of non-zero elements per row (by definition, thanks to the previously discussed encoding function), this amount will actually be double the real amount of discrepancies (since each ``error'' will appear twice in the difference matrix, once for the value in the validation matrix and once for the value in the output matrix).
+In words, this function first calculates the total number of non-zero elements in the element-by-element difference between both matrices; since both matrices have exactly the same amount of non-zero elements per row (by definition, thanks to the previously discussed encoding function), this amount will actually be double the real amount of discrepancies (since each ``error'' will appear twice in the difference matrix, once for the value in the validation matrix and once for the value in the output matrix).
 This value is then divided by two to get the correct amount of errors, before being divided by the total expected number of output values in the validation matrix to get the decimal representation of the error in the classification.
 Finally, this value is subtracted from $1$ to get the total accuracy value of the model for the given training data. 
 
@@ -251,7 +293,7 @@ def accuracy_score(x1, x2):
 \end{lstlisting}
 
 After validation of the results, the accuracy score values are printed to standard output for review. 
-The predictions generated by the classifier for each scenario are ``decoded'' (using the function detailed in listing \ref{lst:decode}) back the to dataset format for output labels (i.e, vectors of nine integers between $0$ and $12 288$ each) and written to CSV-formatted text files for future use.
+The predictions generated by the classifier for each scenario are ``decoded'' (using the function detailed in listing \ref{lst:decode}) back the to dataset format for output labels (i.e, vectors of nine integers between \num{0} and \num{12288} each) and written to CSV-formatted text files for future use.
 
 \subsection{k-fold cross-validation}
 
@@ -264,17 +306,17 @@ A new, custom, k-fold cross-validation was then implemented taking these caveats
 \section{Results and conclusion}
 
 The results obtained were highly positive.
-Table \ref{tbl:accuracy} exposes the accuracy scores obtained for the classification tasks, \emph{i.e.} fitting the linear multi-class support vector machines on the $48 000$ training samples available for each scenario and then validating on the respective $24 000$ samples available for each.
+Table \ref{tbl:accuracy} exposes the accuracy scores obtained for the classification tasks, \emph{i.e.} fitting the linear multi-class support vector machines on the \num{48000} training samples available for each scenario and then validating on the respective \num{24000} samples available for each.
 
-\begin{table}[tb]
+\begin{table}[thb]
 	\centering
 	\begin{tabular}{|l|c|}
 		\hline 
 		\textbf{Scenario} & \textbf{Accuracy Score} \\ 
-		Perfect position information & $0.9926$ \\ 
-		Position with gaussian error - std = $0.10$ & $0.9858$ \\ 
-		Position with gaussian error - std = $0.25$ & $0.9556$ \\ 
-		Position with gaussian error - std = $0.40$ & $0.9177$ \\ 
+		Perfect position information & \num{0.9926} \\ 
+		Position with gaussian error - std = \num{0.10} & \num{0.9858} \\ 
+		Position with gaussian error - std = \num{0.25} & \num{0.9556} \\ 
+		Position with gaussian error - std = \num{0.40} & \num{0.9177} \\ 
 		\hline 
 	\end{tabular}
 	\caption{Accuracy results for each scenario on the respective test datasets.}
@@ -283,33 +325,37 @@ Table \ref{tbl:accuracy} exposes the accuracy scores obtained for the classifica
 
 These results present 
 
-The results for the 10-fold cross-validation tasks are presented in table \ref{tbl:10foldcv}.
+The results for the \num{10}-fold cross-validation tasks are presented in table \ref{tbl:10foldcv}.
 
-\begin{table}
+\begin{table}[thb]
     \centering
     \begin{tabular}{|l|c|c|}
         \hline 
         \textbf{Scenario} & \textbf{Avg. Accuracy} & \textbf{STD} \\ 
-        Perfect position information & $0.9982$ & $0.0003$ \\ 
-        Position with gaussian error - std = $0.10$ & $0.9985$ & $0.0002$ \\ 
-        Position with gaussian error - std = $0.25$ & $0.9985$ & $0.0002$ \\ 
-        Position with gaussian error - std = $0.40$ & $0.9994$ & $0.0003$ \\ 
+        Perfect position information & \num{0.9982} & \num{0.0003} \\ 
+        Position with gaussian error - std = \num{0.10} & \num{0.9985} & \num{0.0002} \\ 
+        Position with gaussian error - std = \num{0.25} & \num{0.9985} & \num{0.0002} \\ 
+        Position with gaussian error - std = \num{0.40} & \num{0.9994} & \num{0.0003} \\ 
         \hline 
     \end{tabular}
-    \caption{Results for the 10-fold cross-validation tasks.}
+    \caption{Results for the \num{10}-fold cross-validation tasks.}
     \label{tbl:10foldcv}
 \end{table}
 
-\begin{table}
+Performance metrics for the fitting, validating and cross-validating of the data were also evaluated. Specifically, we recollected information on the runtime of each stage along with the CPU and RAM usage of the program, presented in table \ref{tbl:runtime} and figures \ref{fig:cpu} and \ref{fig:ram}.
+
+\begin{table} [thb]
     \centering
     \begin{tabular}{|l|c|}
         \hline
         \textbf{Task} & \textbf{Avg. Time [s]}\\ 
-        Fit Classifier & 107.78 \\ 
-        Validate on test data & 2.04 \\ 
-        10-fold cross-validation & 489.93 \\ 
+        Fit Classifier & \num{107.78} \\ 
+        Validate on test data & \num{2.04} \\ 
+        10-fold cross-validation & \num{489.93} \\ 
         \hline 
     \end{tabular} 
+    \caption{Average runtime for each stage of the program.}
+    \label{tbl:runtime}
 \end{table}
 
 \printbibliography
@@ -379,5 +425,17 @@ def k_fold_cross_validation(dataset, k=10):
 	results = np.array(results)
 	return results.mean(), results.std()
 \end{lstlisting}
+
+\begin{figure}[p]
+    \includegraphics[width=\linewidth]{cpu.png}
+    \caption{CPU usage for each logical core, along with the total aggregated CPU usage, over time.}
+    \label{fig:cpu}
+\end{figure}
+
+\begin{figure}[p]
+    \includegraphics[width=\linewidth]{ram.png}
+    \caption{RAM usage during execution of the program.}
+    \label{fig:ram}
+\end{figure}
 
 \end{document}
