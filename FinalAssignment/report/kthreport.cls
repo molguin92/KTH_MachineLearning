@@ -50,6 +50,7 @@
 \setlength{\TPHorizModule}{1mm}%
 \setlength{\TPVertModule}{1mm}%
 \RequirePackage{graphicx} % to include the logo
+%\RequirePackage{hyperref}
 
 \ifxeorlua
   \RequirePackage{fontspec}
@@ -72,10 +73,12 @@
 \linespread{1.05}
 
 % Define commands for setting the user definable parts of the title page
-\let\@diarienr\@empty
-\newcommand{\diarienr}[1]{\def\@diarienr{#1}}
+\let\@idnumber\@empty
+\newcommand{\idnumber}[1]{\def\@idnumber{#1}}
 \let\@subtitle\@empty
 \newcommand{\subtitle}[1]{\def\@subtitle{#1}}
+\let\@email\@empty
+\newcommand{\email}[1]{\def\@email{#1}}
 
 % Command to print out the standardized title page
 \renewcommand{\maketitle}{
@@ -94,16 +97,17 @@
       \ifinswedish
       \begin{tabular}{p{3cm}p{3cm}p{3cm}}
         \textbf{RAPPORT} & \textbf{Dokumentdatum} & \textbf{Ev. diarienummer} \\
-        & \@date & \@diarienr \\
+        & \@date & \@idnumber \\
         \multicolumn{3}{l}{\textbf{Skapat av}} \\
         \multicolumn{3}{l}{\@author} \\
       \end{tabular}
       \else
       \begin{tabular}{p{3cm}p{3cm}p{3cm}}
-        \textbf{REPORT} & \textbf{Date} & \textbf{Reference number} \\
-        & \@date & \@diarienr \\
-        \multicolumn{3}{l}{\textbf{Created by}} \\
+        \textbf{REPORT} & \textbf{Author ID} & \textbf{Date} \\
+        & \@idnumber & \@date \\
+        \multicolumn{3}{l}{\textbf{Author}} \\
         \multicolumn{3}{l}{\@author} \\
+        \multicolumn{3}{l}{\texttt{\@email}} \\
       \end{tabular}
       \fi
     \end{minipage}

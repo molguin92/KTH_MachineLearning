@@ -56,6 +56,7 @@
 	escapeinside={/l*}{*l/}
 }
 
+%\usepackage{hyperref}
 \usepackage{url}
 
 \newcommand{\suchthat}{\, \mid \,} % nice "such that"
@@ -67,7 +68,8 @@
 \title{Final Assignment}
 \subtitle{DD3431 Machine Learning (PhD variant)}
 \author{Manuel Osvaldo Olguín}
-\diarienr{01}
+\email{molguin@kth.se}
+\idnumber{921223-4679}
 
 \begin{document}
 \maketitle
@@ -224,7 +226,6 @@ label={lst:example1}]
 
 
 This data was parsed using \textbf{numpy}'s \textbf{loadfromtxt()} function, and then split into separate arrays for the input and output data (labels). The input data was passed ``as-is'' to the classifier, but the output data required additional processing which will be detailed below.
-
 
 As mentioned before, the output labels for each case were presented in the form of \num{9} consecutive integers, each ranging in value from \num{0} to \num{12288}. On the other hand, as per the API specifications\footnote{\url{http://scikit.ml/api/datasets.html#the-multi-label-data-representation}} of \textbf{scikit-multilearn}, when using the \textbf{LabelPowerSet} problem transformation, the output labels passed to (and obtained from) the classifier need to be encoded into a \emph{binary indicator matrix}. 
 
