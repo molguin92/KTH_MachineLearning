@@ -1,0 +1,424 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 2.8 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \sortlist[entry]{none/global/}
+    \entry{tsoumakas2006multi}{article}{}
+      \name{author}{2}{}{%
+        {{hash=4f0d141cf0fe25aef8af5a28df702ef7}{%
+           family={Tsoumakas},
+           familyi={T\bibinitperiod},
+           given={Grigorios},
+           giveni={G\bibinitperiod}}}%
+        {{hash=91b5fa88d99d012b0486f3602b17f8fe}{%
+           family={Katakis},
+           familyi={K\bibinitperiod},
+           given={Ioannis},
+           giveni={I\bibinitperiod}}}%
+      }
+      \strng{namehash}{3eae60f117932774a2c5c843ad11eabb}
+      \strng{fullhash}{3eae60f117932774a2c5c843ad11eabb}
+      \strng{authornamehash}{3eae60f117932774a2c5c843ad11eabb}
+      \strng{authorfullhash}{3eae60f117932774a2c5c843ad11eabb}
+      \field{sortinit}{1}
+      \field{sortinithash}{27a2bc5dfb9ed0a0422134d636544b5d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{International Journal of Data Warehousing and Mining}
+      \field{number}{3}
+      \field{title}{Multi-label classification: An overview}
+      \field{volume}{3}
+      \field{year}{2006}
+    \endentry
+    \entry{hsu2002comparison}{article}{}
+      \name{author}{2}{}{%
+        {{hash=50d1a66d4807a3d7807226403051f1e7}{%
+           family={Hsu},
+           familyi={H\bibinitperiod},
+           given={Chih-Wei},
+           giveni={C\bibinithyphendelim W\bibinitperiod}}}%
+        {{hash=bb8c32ec740b902c4f066796b083badc}{%
+           family={Lin},
+           familyi={L\bibinitperiod},
+           given={Chih-Jen},
+           giveni={C\bibinithyphendelim J\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{0be933ce09efd0e714cb5da7486d5e51}
+      \strng{fullhash}{0be933ce09efd0e714cb5da7486d5e51}
+      \strng{authornamehash}{0be933ce09efd0e714cb5da7486d5e51}
+      \strng{authorfullhash}{0be933ce09efd0e714cb5da7486d5e51}
+      \field{sortinit}{2}
+      \field{sortinithash}{0aa614ace9f3a40ef5a67e7f7a184048}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE transactions on Neural Networks}
+      \field{number}{2}
+      \field{title}{A comparison of methods for multiclass support vector machines}
+      \field{volume}{13}
+      \field{year}{2002}
+      \field{pages}{415\bibrangedash 425}
+      \range{pages}{11}
+    \endentry
+    \entry{tax2002multiclass}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=f6a52eda58fd644ce9544d7204c25987}{%
+           family={Tax},
+           familyi={T\bibinitperiod},
+           given={D.\bibnamedelimi M.\bibnamedelimi J.},
+           giveni={D\bibinitperiod\bibinitdelim M\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=3cc8f1c3ce959ecc25fe1018bb2de201}{%
+           family={Duin},
+           familyi={D\bibinitperiod},
+           given={R.\bibnamedelimi P.\bibnamedelimi W.},
+           giveni={R\bibinitperiod\bibinitdelim P\bibinitperiod\bibinitdelim W\bibinitperiod}}}%
+      }
+      \strng{namehash}{a8413d65a9692f60a94b9d920f747bbd}
+      \strng{fullhash}{a8413d65a9692f60a94b9d920f747bbd}
+      \strng{authornamehash}{a8413d65a9692f60a94b9d920f747bbd}
+      \strng{authorfullhash}{a8413d65a9692f60a94b9d920f747bbd}
+      \field{sortinit}{2}
+      \field{sortinithash}{0aa614ace9f3a40ef5a67e7f7a184048}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Object recognition supported by user interaction for service robots}
+      \field{issn}{1051-4651}
+      \field{title}{Using two-class classifiers for multiclass classification}
+      \field{volume}{2}
+      \field{year}{2002}
+      \field{pages}{124\bibrangedash 127 vol.2}
+      \range{pages}{-1}
+      \verb{doi}
+      \verb 10.1109/ICPR.2002.1048253
+      \endverb
+      \keyw{Bayes methods;image classification;probability;Bayes classifier;approximate posterior probability estimates;confidence value estimations;discriminants;error-correcting output codes;multiclass classification;two-class classifiers;voting;Birth disorders;Electronic mail;Labeling;Pattern recognition;Probability density function;Testing;Vectors;Voting}
+    \endentry
+    \entry{chen2009dagsvm}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=508b1ef337deff2bcc9f0e03cb483d05}{%
+           family={Chen},
+           familyi={C\bibinitperiod},
+           given={P.},
+           giveni={P\bibinitperiod}}}%
+        {{hash=b6b24eba2cb29d4dceae106a2fb4a6ec}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={S.},
+           giveni={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{ea80f41016c251859fc5c75b7803d8c3}
+      \strng{fullhash}{ea80f41016c251859fc5c75b7803d8c3}
+      \strng{authornamehash}{ea80f41016c251859fc5c75b7803d8c3}
+      \strng{authorfullhash}{ea80f41016c251859fc5c75b7803d8c3}
+      \field{sortinit}{3}
+      \field{sortinithash}{197da6d6c34c6b20ce45c4d4baace5a4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2009 Fifth International Conference on Natural Computation}
+      \field{issn}{2157-9555}
+      \field{month}{8}
+      \field{title}{An Improved {DAG-SVM} for Multi-class Classification}
+      \field{volume}{1}
+      \field{year}{2009}
+      \field{pages}{460\bibrangedash 462}
+      \range{pages}{3}
+      \verb{doi}
+      \verb 10.1109/ICNC.2009.275
+      \endverb
+      \keyw{benchmark testing;classification;directed graphs;support vector machines;SVM decision function;benchmark dataset;decision node;directed acyclic graph support vector machine;multi class classification;Benchmark testing;Classification algorithms;Computer science;Data structures;Educational institutions;Kernel;Machine learning;Statistical learning;Support vector machine classification;Support vector machines;decision node;directed acyclic graph;multi-class classification;support vector machine}
+    \endentry
+    \entry{platt2000ddag}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=f8bbfb70aa80f7cabfa2fb7d91cb7dbb}{%
+           family={Platt},
+           familyi={P\bibinitperiod},
+           given={John\bibnamedelima C},
+           giveni={J\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+        {{hash=b643588b4a53ed47702d3277b6de83a9}{%
+           family={Cristianini},
+           familyi={C\bibinitperiod},
+           given={Nello},
+           giveni={N\bibinitperiod}}}%
+        {{hash=8feae4ec394a5f6905c74b1a7abff875}{%
+           family={Shawe-Taylor},
+           familyi={S\bibinithyphendelim T\bibinitperiod},
+           given={John},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{6dc97675395fc995ed1c299acabd31aa}
+      \strng{fullhash}{6dc97675395fc995ed1c299acabd31aa}
+      \strng{authornamehash}{6dc97675395fc995ed1c299acabd31aa}
+      \strng{authorfullhash}{6dc97675395fc995ed1c299acabd31aa}
+      \field{sortinit}{4}
+      \field{sortinithash}{d221becdd544034cf9082056cd6e6d2d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Advances in neural information processing systems}
+      \field{title}{Large margin {DAGs} for multiclass classification}
+      \field{year}{2000}
+      \field{pages}{547\bibrangedash 553}
+      \range{pages}{7}
+    \endentry
+    \entry{scikit-learn}{article}{}
+      \name{author}{16}{}{%
+        {{hash=22e2e571cc6356b3cb21d40e212ca6ac}{%
+           family={Pedregosa},
+           familyi={P\bibinitperiod},
+           given={F.},
+           giveni={F\bibinitperiod}}}%
+        {{hash=90a0a2720bfe73efd4029f8a456cdcc3}{%
+           family={Varoquaux},
+           familyi={V\bibinitperiod},
+           given={G.},
+           giveni={G\bibinitperiod}}}%
+        {{hash=386dd6e7464b390d92ce58cf04ba101c}{%
+           family={Gramfort},
+           familyi={G\bibinitperiod},
+           given={A.},
+           giveni={A\bibinitperiod}}}%
+        {{hash=ce3bf798cb091d3910827d51160fe0f8}{%
+           family={Michel},
+           familyi={M\bibinitperiod},
+           given={V.},
+           giveni={V\bibinitperiod}}}%
+        {{hash=b8fa2de348731073d50b89e07267e159}{%
+           family={Thirion},
+           familyi={T\bibinitperiod},
+           given={B.},
+           giveni={B\bibinitperiod}}}%
+        {{hash=1c2f66c39a6e2b2ca4d545348028a677}{%
+           family={Grisel},
+           familyi={G\bibinitperiod},
+           given={O.},
+           giveni={O\bibinitperiod}}}%
+        {{hash=f5652799b846fbd40ce19b83c70ef1d3}{%
+           family={Blondel},
+           familyi={B\bibinitperiod},
+           given={M.},
+           giveni={M\bibinitperiod}}}%
+        {{hash=8d2ca4be32fef4d9e848709878fcb757}{%
+           family={Prettenhofer},
+           familyi={P\bibinitperiod},
+           given={P.},
+           giveni={P\bibinitperiod}}}%
+        {{hash=56ac3785f81550a29a28d3abd746ecff}{%
+           family={Weiss},
+           familyi={W\bibinitperiod},
+           given={R.},
+           giveni={R\bibinitperiod}}}%
+        {{hash=cb070bdb80f3a6add15c62ca13a4a419}{%
+           family={Dubourg},
+           familyi={D\bibinitperiod},
+           given={V.},
+           giveni={V\bibinitperiod}}}%
+        {{hash=f1aa9e81c02f406a26762c8c85fdc1fb}{%
+           family={Vanderplas},
+           familyi={V\bibinitperiod},
+           given={J.},
+           giveni={J\bibinitperiod}}}%
+        {{hash=35a7037441ee9fd7ca45c2216a9cb080}{%
+           family={Passos},
+           familyi={P\bibinitperiod},
+           given={A.},
+           giveni={A\bibinitperiod}}}%
+        {{hash=39b253ebe84b96f6acd07b762d251ca1}{%
+           family={Cournapeau},
+           familyi={C\bibinitperiod},
+           given={D.},
+           giveni={D\bibinitperiod}}}%
+        {{hash=3c836162a7c1b02a3454bb2df2c57303}{%
+           family={Brucher},
+           familyi={B\bibinitperiod},
+           given={M.},
+           giveni={M\bibinitperiod}}}%
+        {{hash=980c432be67e1ca5879a0aee315ff2a9}{%
+           family={Perrot},
+           familyi={P\bibinitperiod},
+           given={M.},
+           giveni={M\bibinitperiod}}}%
+        {{hash=ad11ee93370bf63bb64684cfdff0836f}{%
+           family={Duchesnay},
+           familyi={D\bibinitperiod},
+           given={E.},
+           giveni={E\bibinitperiod}}}%
+      }
+      \strng{namehash}{7f03c9665977d16cca3f7d744a8a06df}
+      \strng{fullhash}{81371d66ce2cfb28d217f955948ace55}
+      \strng{authornamehash}{7f03c9665977d16cca3f7d744a8a06df}
+      \strng{authorfullhash}{81371d66ce2cfb28d217f955948ace55}
+      \field{sortinit}{5}
+      \field{sortinithash}{c9df3c9fb8f555dd9201cedc5e343021}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Machine Learning Research}
+      \field{title}{{Scikit-learn}: Machine Learning in {P}ython}
+      \field{volume}{12}
+      \field{year}{2011}
+      \field{pages}{2825\bibrangedash 2830}
+      \range{pages}{6}
+    \endentry
+    \entry{scikit-multilearn}{article}{}
+      \name{author}{2}{}{%
+        {{hash=091738555018cc6cb5f15b16e5709ca9}{%
+           family={{Szymański}},
+           familyi={S\bibinitperiod},
+           given={P.},
+           giveni={P\bibinitperiod}}}%
+        {{hash=911ba0eae3bc00a0e7521914d93a1d09}{%
+           family={{Kajdanowicz}},
+           familyi={K\bibinitperiod},
+           given={T.},
+           giveni={T\bibinitperiod}}}%
+      }
+      \strng{namehash}{d5261581d8ffe1f924041cb9f54b55c3}
+      \strng{fullhash}{d5261581d8ffe1f924041cb9f54b55c3}
+      \strng{authornamehash}{d5261581d8ffe1f924041cb9f54b55c3}
+      \strng{authorfullhash}{d5261581d8ffe1f924041cb9f54b55c3}
+      \field{sortinit}{5}
+      \field{sortinithash}{c9df3c9fb8f555dd9201cedc5e343021}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprintclass}{cs.LG}
+      \field{eprinttype}{arXiv}
+      \field{journaltitle}{ArXiv e-prints}
+      \field{month}{2}
+      \field{title}{{A scikit-based {Python} environment for performing multi-label classification}}
+      \field{year}{2017}
+      \verb{eprint}
+      \verb 1702.01460
+      \endverb
+      \keyw{Computer Science - Learning,Computer Science - Mathematical Software}
+    \endentry
+    \entry{scipy}{misc}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{3}{}{%
+        {{hash=4b3d26f886661aa723985bcfd835ba18}{%
+           family={Jones},
+           familyi={J\bibinitperiod},
+           given={Eric},
+           giveni={E\bibinitperiod}}}%
+        {{hash=84194a0ad9431322c2f58a085b3991f0}{%
+           family={Oliphant},
+           familyi={O\bibinitperiod},
+           given={Travis},
+           giveni={T\bibinitperiod}}}%
+        {{hash=3d6efaaa3d9682e20787eb06ff70a3d7}{%
+           family={Peterson},
+           familyi={P\bibinitperiod},
+           given={Pearu},
+           giveni={P\bibinitperiod}}}%
+      }
+      \strng{namehash}{6161d5ffac903d9c99af53f45c09a00f}
+      \strng{fullhash}{0fc4e01109f422119afc29f3251df541}
+      \strng{authornamehash}{6161d5ffac903d9c99af53f45c09a00f}
+      \strng{authorfullhash}{0fc4e01109f422119afc29f3251df541}
+      \field{sortinit}{5}
+      \field{sortinithash}{c9df3c9fb8f555dd9201cedc5e343021}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{[Online; accessed <today>]}
+      \field{title}{{SciPy}: Open source scientific tools for {Python}}
+      \field{year}{2001--}
+      \verb{url}
+      \verb http://www.scipy.org/
+      \endverb
+    \endentry
+    \entry{matplotlib}{article}{}
+      \name{author}{1}{}{%
+        {{hash=515b7a67462b8750a0711541001538cb}{%
+           family={Hunter},
+           familyi={H\bibinitperiod},
+           given={J.\bibnamedelimi D.},
+           giveni={J\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {IEEE COMPUTER SOC}%
+      }
+      \strng{namehash}{515b7a67462b8750a0711541001538cb}
+      \strng{fullhash}{515b7a67462b8750a0711541001538cb}
+      \strng{authornamehash}{515b7a67462b8750a0711541001538cb}
+      \strng{authorfullhash}{515b7a67462b8750a0711541001538cb}
+      \field{sortinit}{5}
+      \field{sortinithash}{c9df3c9fb8f555dd9201cedc5e343021}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Matplotlib is a 2D graphics package used for Python for application development, interactive scripting, and publication-quality image generation across user interfaces and operating systems.}
+      \field{journaltitle}{Computing In Science \& Engineering}
+      \field{number}{3}
+      \field{title}{{Matplotlib}: A 2D graphics environment}
+      \field{volume}{9}
+      \field{year}{2007}
+      \field{pages}{90\bibrangedash 95}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1109/MCSE.2007.55
+      \endverb
+    \endentry
+    \entry{numpy}{article}{}
+      \name{author}{3}{}{%
+        {{hash=385cf725d4d28f79a6a6e5c6e0635ba4}{%
+           family={Walt},
+           familyi={W\bibinitperiod},
+           given={Stéfan},
+           giveni={S\bibinitperiod},
+           prefix={van\bibnamedelima der},
+           prefixi={v\bibinitperiod\bibinitdelim d\bibinitperiod}}}%
+        {{hash=e4a47779c44b3cd7474c52c4875d4d39}{%
+           family={Colbert},
+           familyi={C\bibinitperiod},
+           given={S.\bibnamedelimi Chris},
+           giveni={S\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+        {{hash=cfa3239dded54488f9a82a5718d5b927}{%
+           family={Varoquaux},
+           familyi={V\bibinitperiod},
+           given={Gaël},
+           giveni={G\bibinitperiod}}}%
+      }
+      \strng{namehash}{a00040fd60ca1ea3f9d5524466f6d4eb}
+      \strng{fullhash}{a00040fd60ca1ea3f9d5524466f6d4eb}
+      \strng{authornamehash}{a00040fd60ca1ea3f9d5524466f6d4eb}
+      \strng{authorfullhash}{a00040fd60ca1ea3f9d5524466f6d4eb}
+      \field{sortinit}{5}
+      \field{sortinithash}{c9df3c9fb8f555dd9201cedc5e343021}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Computing in Science \& Engineering}
+      \field{number}{2}
+      \field{title}{The {NumPy Array}: A Structure for Efficient Numerical Computation}
+      \field{volume}{13}
+      \field{year}{2011}
+      \field{pages}{22\bibrangedash 30}
+      \range{pages}{9}
+      \verb{doi}
+      \verb 10.1109/MCSE.2011.37
+      \endverb
+      \verb{eprint}
+      \verb http://aip.scitation.org/doi/pdf/10.1109/MCSE.2011.37
+      \endverb
+      \verb{url}
+      \verb http://aip.scitation.org/doi/abs/10.1109/MCSE.2011.37
+      \endverb
+    \endentry
+  \endsortlist
+\endrefsection
+\endinput
+
